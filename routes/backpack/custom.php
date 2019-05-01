@@ -14,4 +14,7 @@ Route::group([
     CRUD::resource('actor', 'ActorCrudController');
     CRUD::resource('director', 'DirectorCrudController');
     CRUD::resource('movie', 'MovieCrudController');
+    CRUD::resource('function', 'FunctionCrudController');
+    CRUD::resource('room', 'RoomCrudController');
+    CRUD::resource('genre', 'GenreCrudController');
 }); // this should be the absolute last line of this file

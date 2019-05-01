@@ -1,0 +1,17 @@
+doctype
+html
+	head
+		include include/head
+	body
+		include include/header
+		.peliculas
+			@foreach($movies as $movie)
+			.pelicula
+				img(src!="{{ $movie->poster }}")
+				h2 {{ $movie->name }}
+				a(href="#") Comprar boletos
+			@endforeach
+		.ubicanos
+			#map
+
+		include include/footer

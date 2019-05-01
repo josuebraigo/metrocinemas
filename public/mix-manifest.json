@@ -1,0 +1,10 @@
+{
+    "/js/vendor.js": "/js/vendor.js",
+    "/js/general.js": "/js/general.js",
+    "/js/manifest.js": "/js/manifest.js",
+    "/resources/views/include/footer.blade.php": "/resources/views/include/footer.blade.php",
+    "/resources/views/include/head.blade.php": "/resources/views/include/head.blade.php",
+    "/resources/views/include/header.blade.php": "/resources/views/include/header.blade.php",
+    "/resources/views/index.blade.php": "/resources/views/index.blade.php",
+    "/css/styles.css": "/css/styles.css"
+}

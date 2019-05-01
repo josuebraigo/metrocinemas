@@ -68,6 +68,16 @@ class MovieCrudController extends CrudController
         ]);
 
         $this->crud->addField([
+            'label' => "Poster (<a href='https://www.lahiguera.net/cinemania/'>Descargar de aquí</a>)",
+            'name' => 'poster',
+            'type' => 'image',
+            'upload' => true,
+            'crop' => true,
+            'aspect_ratio' => 0,
+
+        ]);
+
+        $this->crud->addField([
             'label' => "Año",
             'name' => 'year',
             'type' => 'number',
@@ -86,6 +96,12 @@ class MovieCrudController extends CrudController
             'name' => 'name',
             'label' => 'Nombre',
         ]);
+
+        $this->crud->addColumn([
+            'name' => 'director.name',
+            'label' => 'Director',
+        ]);
+
         $this->crud->addColumn([
             'name' => 'duration',
             'label' => 'Duración',

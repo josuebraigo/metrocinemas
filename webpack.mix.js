@@ -11,5 +11,13 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js')
-    .sass('resources/sass/app.scss', 'public/css');
+mix.browserSync('metrocinemas.test');
+
+mix.sass('resources/sass/styles.scss', 'public/css');
+
+mix.pug = require('laravel-mix-blade-pug');
+mix.pug('resources/pug', 'resources/views');
+
+mix.js('resources/js/general.js', 'public/js')
+    .extract(['jquery', 'slick-carousel','webui-popover', 'card', 'bullseye', 'jquery-zoom', 'jquery-match-height', 'jquery.localscroll']).autoload({
+    });

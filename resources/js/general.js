@@ -1,0 +1,8 @@
+$(document).ready(function() {
+	$('.peliculas').slick({
+		infinite: true,
+  		slidesToShow: 3,
+  		slidesToScroll: 3
+	});
+
+});

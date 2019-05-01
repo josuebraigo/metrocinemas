@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Backpack\CRUD\CrudTrait;
 
-class Movie extends Model
+class Funcion extends Model
 {
     use CrudTrait;
 
@@ -15,7 +15,7 @@ class Movie extends Model
     |--------------------------------------------------------------------------
     */
 
-    protected $table = 'movies';
+    protected $table = 'functions';
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
@@ -34,26 +34,17 @@ class Movie extends Model
     | RELATIONS
     |--------------------------------------------------------------------------
     */
+    public function movie() {
 
-    public function actors () {
-
-        return $this->belongsToMany('App\Models\Actor');
-
-    }
-
-
-    public function director () {
-
-        return $this->belongsTo('App\Models\Director');
+        return $this->hasOne('App\Models\Movie');
 
     }
 
-    public function funcion() {
-
-        return $this->belongsTo('App\Models\Funcion');
+    public function room() {
+        
+        return $this->hasOne('App\Models\Room');
 
     }
-
     /*
     |--------------------------------------------------------------------------
     | SCOPES
