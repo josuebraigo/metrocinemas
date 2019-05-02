@@ -1,0 +1,25 @@
+doctype
+html
+	head
+		include include/head
+	body#cartelera
+		include include/header
+		.container
+			.submenu
+				h4 Géneros
+				ul
+					@foreach($genres as $genre)
+					li
+						a(href!="cartelera/{{$genre->slug}}") {{$genre->name}}
+					@endforeach
+			.catalogo
+				@foreach($movies as $movie)
+				.col14
+					a(href!="pelicula/{{$movie->slug}}")
+						img(src!="{{$movie->poster}}")
+					h2 {{$movie->name}}
+					a.boton(href!="funciones/{{$movie->slug}}") ¡Compra tus boletos!
+				@endforeach
+
+				
+		include include/footer

@@ -19,5 +19,6 @@ mix.pug = require('laravel-mix-blade-pug');
 mix.pug('resources/pug', 'resources/views');
 
 mix.js('resources/js/general.js', 'public/js')
-    .extract(['jquery', 'slick-carousel','webui-popover', 'card', 'bullseye', 'jquery-zoom', 'jquery-match-height', 'jquery.localscroll']).autoload({
+  	.extract(['jquery', 'slick-carousel','webui-popover', 'card', 'bullseye', 'jquery-zoom', 'jquery-match-height', 'jquery.localscroll']).autoload({
+        jquery: ['$', 'window.jQuery', 'jQuery'],
     });

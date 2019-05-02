@@ -18,8 +18,8 @@ class Genre extends Model
     protected $table = 'genres';
     // protected $primaryKey = 'id';
     // public $timestamps = false;
-    // protected $guarded = ['id'];
-    protected $fillable = [];
+    protected $guarded = ['id'];
+    // protected $fillable = [];
     // protected $hidden = [];
     // protected $dates = [];
 
@@ -34,6 +34,12 @@ class Genre extends Model
     | RELATIONS
     |--------------------------------------------------------------------------
     */
+
+    public function movies () {
+
+        return $this->hasMany('App\Models\Movie');
+
+    }
 
     /*
     |--------------------------------------------------------------------------

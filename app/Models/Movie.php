@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Backpack\CRUD\CrudTrait;
+use Laravel\Scout\Searchable;
 
 class Movie extends Model
 {
     use CrudTrait;
+    use Searchable;
 
     /*
     |--------------------------------------------------------------------------
@@ -50,8 +52,12 @@ class Movie extends Model
 
     public function funcion() {
 
-        return $this->belongsTo('App\Models\Funcion');
+        return $this->hasMany('App\Models\Funcion');
 
+    }
+
+    public function genre() {
+        return $this->belongsTo('App\Models\Genre');
     }
 
     /*

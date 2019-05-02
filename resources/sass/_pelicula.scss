@@ -1,0 +1,42 @@
+#pelicula {
+	.container {
+		width: 80%;
+		margin: 2em auto;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		.poster {
+			width: 30%;
+			img {
+				width: 100%;
+				margin-bottom: 2em;
+			}
+			.boton {
+				border: 2px solid #3D4852;
+				color: #3D4852;
+				width: 100%;
+				padding: .5em 0;
+				display: block;
+				text-align: center;
+				font-weight: 600;
+				text-decoration: none;
+				text-transform: uppercase;
+				transition: ease .5s;
+				&:hover {
+					background-color: #3D4852;
+					color: #fff;
+				}
+			}
+		}
+		.info {
+			h1 {
+				padding-bottom: 5px;
+				border-bottom: 2px solid #000;
+			}
+			width: 60%;
+			p {
+				text-align: justify;
+			}
+		}
+	}
+}

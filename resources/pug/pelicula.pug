@@ -1,0 +1,35 @@
+doctype
+html
+	head
+		include include/head
+	body#pelicula
+		include include/header
+		.container
+			.poster
+				img(src!="{{$movie->poster}}" alt!="{{$movie->name}}")
+				a.boton(href="funciones/{{$movie->slug}}") ¡Comprar boletos!
+			.info
+				h1 {{$movie->name}}
+				p
+					b Director: 
+					| {{$movie->director->name}}
+				p 
+					b Duración: 
+					| {{$movie->duration}} min
+				p
+					b Año: 
+					| {{$movie->year}}
+				p
+					b Género: 
+					| {{$movie->genre->name}}
+				p
+					b País: 
+					| {{$movie->country}}
+				h2 Sinopsis
+				p {{$movie->synopsis}}
+				h2 Trailer
+				p 
+				iframe(width="560" height="315" src!="https://www.youtube.com/embed/{{json_decode($movie->trailer)->id}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen)
+
+
+		include include/footer

@@ -34,7 +34,46 @@ class FunctionCrudController extends CrudController
         */
 
         // TODO: remove setFromDb() and manually define Fields and Columns
-        $this->crud->setFromDb();
+        // $this->crud->setFromDb();
+
+        $this->crud->addField([
+            'label' => "Pelicula",
+            'name' => 'movie_id',
+            'type' => 'select2',
+            'entity' => 'movie',
+            'attribute' => 'name',
+            'model' => 'App\Models\Movie', 
+        ]);
+
+        $this->crud->addField([
+            'label' => "Sala",
+            'name' => 'room_id',
+            'type' => 'select2',
+            'entity' => 'room',
+            'attribute' => 'name',
+            'model' => 'App\Models\Room', 
+        ]);
+
+        $this->crud->addField([
+            'label' => 'Horario',
+            'name' => 'schedule',
+            'type' => 'time',
+        ]);
+
+       $this->crud->addColumn([
+            'label' => 'Película',
+            'name' => 'movie.name',
+       ]);
+
+       $this->crud->addColumn([
+            'label' => 'Sala',
+            'name' => 'room.name',
+       ]);
+
+       $this->crud->addColumn([
+            'label' => 'Horario',
+            'name' => 'schedule',
+       ]);
 
         // add asterisk for fields that are required in FunctionRequest
         $this->crud->setRequiredFields(StoreRequest::class, 'create');
@@ -42,7 +81,8 @@ class FunctionCrudController extends CrudController
     }
 
     public function store(StoreRequest $request)
-    {
+    {   
+        // dd($request->request);
         // your additional operations before save here
         $redirect_location = parent::storeCrud($request);
         // your additional operations after save here

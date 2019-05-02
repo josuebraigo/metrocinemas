@@ -34,7 +34,18 @@ class RoomCrudController extends CrudController
         */
 
         // TODO: remove setFromDb() and manually define Fields and Columns
-        $this->crud->setFromDb();
+        // $this->crud->setFromDb();
+
+        $this->crud->addField([
+            'label' => "Nombre de la Sala",
+            'type' => 'text',
+            'name' => 'name',
+        ]);
+
+        $this->crud->addColumn([
+            'label' => "Nombre de la Sala",
+            'name' => 'name',
+        ]);
 
         // add asterisk for fields that are required in RoomRequest
         $this->crud->setRequiredFields(StoreRequest::class, 'create');
@@ -43,6 +54,7 @@ class RoomCrudController extends CrudController
 
     public function store(StoreRequest $request)
     {
+        $request->request->set('seats', 'null');
         // your additional operations before save here
         $redirect_location = parent::storeCrud($request);
         // your additional operations after save here

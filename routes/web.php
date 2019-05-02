@@ -12,3 +12,8 @@
 */
 
 Route::get('/', 'BaseController@index');
+Route::get('/cartelera', 'MovieController@cartelera');
+Route::get('/pelicula/{slug}', 'MovieController@show');
+Route::get('/buscar', 'MovieController@search');
+Route::get('/funciones', 'MovieController@functions');
+Route::get('/funciones/{slug}', 'MovieController@functionsMovie');

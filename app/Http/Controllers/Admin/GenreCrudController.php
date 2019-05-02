@@ -8,6 +8,8 @@ use Backpack\CRUD\app\Http\Controllers\CrudController;
 use App\Http\Requests\GenreRequest as StoreRequest;
 use App\Http\Requests\GenreRequest as UpdateRequest;
 use Backpack\CRUD\CrudPanel;
+use Illuminate\Support\Str;
+
 
 /**
  * Class GenreCrudController
@@ -34,7 +36,18 @@ class GenreCrudController extends CrudController
         */
 
         // TODO: remove setFromDb() and manually define Fields and Columns
-        $this->crud->setFromDb();
+        // $this->crud->setFromDb();
+
+        $this->crud->addField([
+            'label' => "Género",
+            'type' => 'text',
+            'name' => 'name',
+        ]);
+
+        $this->crud->addColumn([
+            'label' => "Genero",
+            'name' => 'name',
+        ]);
 
         // add asterisk for fields that are required in GenreRequest
         $this->crud->setRequiredFields(StoreRequest::class, 'create');
@@ -43,6 +56,9 @@ class GenreCrudController extends CrudController
 
     public function store(StoreRequest $request)
     {
+        $name = $request->request->get('name');
+        $slug = Str::slug($name, '-');
+        $request->request->set('slug', $slug);
         // your additional operations before save here
         $redirect_location = parent::storeCrud($request);
         // your additional operations after save here
@@ -52,6 +68,9 @@ class GenreCrudController extends CrudController
 
     public function update(UpdateRequest $request)
     {
+        $name = $request->request->get('name');
+        $slug = Str::slug($name, '-');
+        $request->request->set('slug', $slug);
         // your additional operations before save here
         $redirect_location = parent::updateCrud($request);
         // your additional operations after save here

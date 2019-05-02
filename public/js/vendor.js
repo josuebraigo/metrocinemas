@@ -10866,8 +10866,8 @@ return jQuery;
 "use strict";
 /* WEBPACK VAR INJECTION */(function(global) {
 
-var customEvent = __webpack_require__(26);
-var eventmap = __webpack_require__(27);
+var customEvent = __webpack_require__(27);
+var eventmap = __webpack_require__(28);
 var doc = global.document;
 var addEvent = addEventEasy;
 var removeEvent = removeEventEasy;
@@ -11011,10 +11011,10 @@ module.exports = throttle;
 
 var getSelection;
 var doc = global.document;
-var getSelectionRaw = __webpack_require__(31);
-var getSelectionNullOp = __webpack_require__(32);
-var getSelectionSynthetic = __webpack_require__(33);
-var isHost = __webpack_require__(34);
+var getSelectionRaw = __webpack_require__(32);
+var getSelectionNullOp = __webpack_require__(33);
+var getSelectionSynthetic = __webpack_require__(34);
+var isHost = __webpack_require__(35);
 if (isHost.method(global, 'getSelection')) {
   getSelection = getSelectionRaw;
 } else if (typeof doc.selection === 'object' && doc.selection) {
@@ -11098,21 +11098,558 @@ module.exports = rangeToTextRange;
 /***/ }),
 /* 7 */,
 /* 8 */,
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 9 */,
+/* 10 */
+/***/ (function(module, exports) {
 
-__webpack_require__(1);
-__webpack_require__(10);
-__webpack_require__(11);
-__webpack_require__(12);
-__webpack_require__(25);
-__webpack_require__(36);
-__webpack_require__(37);
-module.exports = __webpack_require__(38);
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function(useSourceMap) {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		return this.map(function (item) {
+			var content = cssWithMappingToString(item, useSourceMap);
+			if(item[2]) {
+				return "@media " + item[2] + "{" + content + "}";
+			} else {
+				return content;
+			}
+		}).join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+function cssWithMappingToString(item, useSourceMap) {
+	var content = item[1] || '';
+	var cssMapping = item[3];
+	if (!cssMapping) {
+		return content;
+	}
+
+	if (useSourceMap && typeof btoa === 'function') {
+		var sourceMapping = toComment(cssMapping);
+		var sourceURLs = cssMapping.sources.map(function (source) {
+			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
+		});
+
+		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
+	}
+
+	return [content].join('\n');
+}
+
+// Adapted from convert-source-map (MIT)
+function toComment(sourceMap) {
+	// eslint-disable-next-line no-undef
+	var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
+	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
+
+	return '/*# ' + data + ' */';
+}
 
 
 /***/ }),
-/* 10 */
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+
+var stylesInDom = {};
+
+var	memoize = function (fn) {
+	var memo;
+
+	return function () {
+		if (typeof memo === "undefined") memo = fn.apply(this, arguments);
+		return memo;
+	};
+};
+
+var isOldIE = memoize(function () {
+	// Test for IE <= 9 as proposed by Browserhacks
+	// @see http://browserhacks.com/#hack-e71d8692f65334173fee715c222cb805
+	// Tests for existence of standard globals is to allow style-loader
+	// to operate correctly into non-standard environments
+	// @see https://github.com/webpack-contrib/style-loader/issues/177
+	return window && document && document.all && !window.atob;
+});
+
+var getElement = (function (fn) {
+	var memo = {};
+
+	return function(selector) {
+		if (typeof memo[selector] === "undefined") {
+			memo[selector] = fn.call(this, selector);
+		}
+
+		return memo[selector]
+	};
+})(function (target) {
+	return document.querySelector(target)
+});
+
+var singleton = null;
+var	singletonCounter = 0;
+var	stylesInsertedAtTop = [];
+
+var	fixUrls = __webpack_require__(12);
+
+module.exports = function(list, options) {
+	if (typeof DEBUG !== "undefined" && DEBUG) {
+		if (typeof document !== "object") throw new Error("The style-loader cannot be used in a non-browser environment");
+	}
+
+	options = options || {};
+
+	options.attrs = typeof options.attrs === "object" ? options.attrs : {};
+
+	// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
+	// tags it will allow on a page
+	if (!options.singleton) options.singleton = isOldIE();
+
+	// By default, add <style> tags to the <head> element
+	if (!options.insertInto) options.insertInto = "head";
+
+	// By default, add <style> tags to the bottom of the target
+	if (!options.insertAt) options.insertAt = "bottom";
+
+	var styles = listToStyles(list, options);
+
+	addStylesToDom(styles, options);
+
+	return function update (newList) {
+		var mayRemove = [];
+
+		for (var i = 0; i < styles.length; i++) {
+			var item = styles[i];
+			var domStyle = stylesInDom[item.id];
+
+			domStyle.refs--;
+			mayRemove.push(domStyle);
+		}
+
+		if(newList) {
+			var newStyles = listToStyles(newList, options);
+			addStylesToDom(newStyles, options);
+		}
+
+		for (var i = 0; i < mayRemove.length; i++) {
+			var domStyle = mayRemove[i];
+
+			if(domStyle.refs === 0) {
+				for (var j = 0; j < domStyle.parts.length; j++) domStyle.parts[j]();
+
+				delete stylesInDom[domStyle.id];
+			}
+		}
+	};
+};
+
+function addStylesToDom (styles, options) {
+	for (var i = 0; i < styles.length; i++) {
+		var item = styles[i];
+		var domStyle = stylesInDom[item.id];
+
+		if(domStyle) {
+			domStyle.refs++;
+
+			for(var j = 0; j < domStyle.parts.length; j++) {
+				domStyle.parts[j](item.parts[j]);
+			}
+
+			for(; j < item.parts.length; j++) {
+				domStyle.parts.push(addStyle(item.parts[j], options));
+			}
+		} else {
+			var parts = [];
+
+			for(var j = 0; j < item.parts.length; j++) {
+				parts.push(addStyle(item.parts[j], options));
+			}
+
+			stylesInDom[item.id] = {id: item.id, refs: 1, parts: parts};
+		}
+	}
+}
+
+function listToStyles (list, options) {
+	var styles = [];
+	var newStyles = {};
+
+	for (var i = 0; i < list.length; i++) {
+		var item = list[i];
+		var id = options.base ? item[0] + options.base : item[0];
+		var css = item[1];
+		var media = item[2];
+		var sourceMap = item[3];
+		var part = {css: css, media: media, sourceMap: sourceMap};
+
+		if(!newStyles[id]) styles.push(newStyles[id] = {id: id, parts: [part]});
+		else newStyles[id].parts.push(part);
+	}
+
+	return styles;
+}
+
+function insertStyleElement (options, style) {
+	var target = getElement(options.insertInto)
+
+	if (!target) {
+		throw new Error("Couldn't find a style target. This probably means that the value for the 'insertInto' parameter is invalid.");
+	}
+
+	var lastStyleElementInsertedAtTop = stylesInsertedAtTop[stylesInsertedAtTop.length - 1];
+
+	if (options.insertAt === "top") {
+		if (!lastStyleElementInsertedAtTop) {
+			target.insertBefore(style, target.firstChild);
+		} else if (lastStyleElementInsertedAtTop.nextSibling) {
+			target.insertBefore(style, lastStyleElementInsertedAtTop.nextSibling);
+		} else {
+			target.appendChild(style);
+		}
+		stylesInsertedAtTop.push(style);
+	} else if (options.insertAt === "bottom") {
+		target.appendChild(style);
+	} else {
+		throw new Error("Invalid value for parameter 'insertAt'. Must be 'top' or 'bottom'.");
+	}
+}
+
+function removeStyleElement (style) {
+	if (style.parentNode === null) return false;
+	style.parentNode.removeChild(style);
+
+	var idx = stylesInsertedAtTop.indexOf(style);
+	if(idx >= 0) {
+		stylesInsertedAtTop.splice(idx, 1);
+	}
+}
+
+function createStyleElement (options) {
+	var style = document.createElement("style");
+
+	options.attrs.type = "text/css";
+
+	addAttrs(style, options.attrs);
+	insertStyleElement(options, style);
+
+	return style;
+}
+
+function createLinkElement (options) {
+	var link = document.createElement("link");
+
+	options.attrs.type = "text/css";
+	options.attrs.rel = "stylesheet";
+
+	addAttrs(link, options.attrs);
+	insertStyleElement(options, link);
+
+	return link;
+}
+
+function addAttrs (el, attrs) {
+	Object.keys(attrs).forEach(function (key) {
+		el.setAttribute(key, attrs[key]);
+	});
+}
+
+function addStyle (obj, options) {
+	var style, update, remove, result;
+
+	// If a transform function was defined, run it on the css
+	if (options.transform && obj.css) {
+	    result = options.transform(obj.css);
+
+	    if (result) {
+	    	// If transform returns a value, use that instead of the original css.
+	    	// This allows running runtime transformations on the css.
+	    	obj.css = result;
+	    } else {
+	    	// If the transform function returns a falsy value, don't add this css.
+	    	// This allows conditional loading of css
+	    	return function() {
+	    		// noop
+	    	};
+	    }
+	}
+
+	if (options.singleton) {
+		var styleIndex = singletonCounter++;
+
+		style = singleton || (singleton = createStyleElement(options));
+
+		update = applyToSingletonTag.bind(null, style, styleIndex, false);
+		remove = applyToSingletonTag.bind(null, style, styleIndex, true);
+
+	} else if (
+		obj.sourceMap &&
+		typeof URL === "function" &&
+		typeof URL.createObjectURL === "function" &&
+		typeof URL.revokeObjectURL === "function" &&
+		typeof Blob === "function" &&
+		typeof btoa === "function"
+	) {
+		style = createLinkElement(options);
+		update = updateLink.bind(null, style, options);
+		remove = function () {
+			removeStyleElement(style);
+
+			if(style.href) URL.revokeObjectURL(style.href);
+		};
+	} else {
+		style = createStyleElement(options);
+		update = applyToTag.bind(null, style);
+		remove = function () {
+			removeStyleElement(style);
+		};
+	}
+
+	update(obj);
+
+	return function updateStyle (newObj) {
+		if (newObj) {
+			if (
+				newObj.css === obj.css &&
+				newObj.media === obj.media &&
+				newObj.sourceMap === obj.sourceMap
+			) {
+				return;
+			}
+
+			update(obj = newObj);
+		} else {
+			remove();
+		}
+	};
+}
+
+var replaceText = (function () {
+	var textStore = [];
+
+	return function (index, replacement) {
+		textStore[index] = replacement;
+
+		return textStore.filter(Boolean).join('\n');
+	};
+})();
+
+function applyToSingletonTag (style, index, remove, obj) {
+	var css = remove ? "" : obj.css;
+
+	if (style.styleSheet) {
+		style.styleSheet.cssText = replaceText(index, css);
+	} else {
+		var cssNode = document.createTextNode(css);
+		var childNodes = style.childNodes;
+
+		if (childNodes[index]) style.removeChild(childNodes[index]);
+
+		if (childNodes.length) {
+			style.insertBefore(cssNode, childNodes[index]);
+		} else {
+			style.appendChild(cssNode);
+		}
+	}
+}
+
+function applyToTag (style, obj) {
+	var css = obj.css;
+	var media = obj.media;
+
+	if(media) {
+		style.setAttribute("media", media)
+	}
+
+	if(style.styleSheet) {
+		style.styleSheet.cssText = css;
+	} else {
+		while(style.firstChild) {
+			style.removeChild(style.firstChild);
+		}
+
+		style.appendChild(document.createTextNode(css));
+	}
+}
+
+function updateLink (link, options, obj) {
+	var css = obj.css;
+	var sourceMap = obj.sourceMap;
+
+	/*
+		If convertToAbsoluteUrls isn't defined, but sourcemaps are enabled
+		and there is no publicPath defined then lets turn convertToAbsoluteUrls
+		on by default.  Otherwise default to the convertToAbsoluteUrls option
+		directly
+	*/
+	var autoFixUrls = options.convertToAbsoluteUrls === undefined && sourceMap;
+
+	if (options.convertToAbsoluteUrls || autoFixUrls) {
+		css = fixUrls(css);
+	}
+
+	if (sourceMap) {
+		// http://stackoverflow.com/a/26603875
+		css += "\n/*# sourceMappingURL=data:application/json;base64," + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + " */";
+	}
+
+	var blob = new Blob([css], { type: "text/css" });
+
+	var oldSrc = link.href;
+
+	link.href = URL.createObjectURL(blob);
+
+	if(oldSrc) URL.revokeObjectURL(oldSrc);
+}
+
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports) {
+
+
+/**
+ * When source maps are enabled, `style-loader` uses a link element with a data-uri to
+ * embed the css on the page. This breaks all relative urls because now they are relative to a
+ * bundle instead of the current page.
+ *
+ * One solution is to only use full urls, but that may be impossible.
+ *
+ * Instead, this function "fixes" the relative urls to be absolute according to the current page location.
+ *
+ * A rudimentary test suite is located at `test/fixUrls.js` and can be run via the `npm test` command.
+ *
+ */
+
+module.exports = function (css) {
+  // get current location
+  var location = typeof window !== "undefined" && window.location;
+
+  if (!location) {
+    throw new Error("fixUrls requires window.location");
+  }
+
+	// blank or null?
+	if (!css || typeof css !== "string") {
+	  return css;
+  }
+
+  var baseUrl = location.protocol + "//" + location.host;
+  var currentDir = baseUrl + location.pathname.replace(/\/[^\/]*$/, "/");
+
+	// convert each url(...)
+	/*
+	This regular expression is just a way to recursively match brackets within
+	a string.
+
+	 /url\s*\(  = Match on the word "url" with any whitespace after it and then a parens
+	   (  = Start a capturing group
+	     (?:  = Start a non-capturing group
+	         [^)(]  = Match anything that isn't a parentheses
+	         |  = OR
+	         \(  = Match a start parentheses
+	             (?:  = Start another non-capturing groups
+	                 [^)(]+  = Match anything that isn't a parentheses
+	                 |  = OR
+	                 \(  = Match a start parentheses
+	                     [^)(]*  = Match anything that isn't a parentheses
+	                 \)  = Match a end parentheses
+	             )  = End Group
+              *\) = Match anything and then a close parens
+          )  = Close non-capturing group
+          *  = Match anything
+       )  = Close capturing group
+	 \)  = Match a close parens
+
+	 /gi  = Get all matches, not the first.  Be case insensitive.
+	 */
+	var fixedCss = css.replace(/url\s*\(((?:[^)(]|\((?:[^)(]+|\([^)(]*\))*\))*)\)/gi, function(fullMatch, origUrl) {
+		// strip quotes (if they exist)
+		var unquotedOrigUrl = origUrl
+			.trim()
+			.replace(/^"(.*)"$/, function(o, $1){ return $1; })
+			.replace(/^'(.*)'$/, function(o, $1){ return $1; });
+
+		// already a full url? no change
+		if (/^(#|data:|http:\/\/|https:\/\/|file:\/\/\/)/i.test(unquotedOrigUrl)) {
+		  return fullMatch;
+		}
+
+		// convert the url to a full url
+		var newUrl;
+
+		if (unquotedOrigUrl.indexOf("//") === 0) {
+		  	//TODO: should we add protocol?
+			newUrl = unquotedOrigUrl;
+		} else if (unquotedOrigUrl.indexOf("/") === 0) {
+			// path should be relative to the base url
+			newUrl = baseUrl + unquotedOrigUrl; // already starts with '/'
+		} else {
+			// path should be relative to current directory
+			newUrl = currentDir + unquotedOrigUrl.replace(/^\.\//, ""); // Strip leading './'
+		}
+
+		// send back the fixed url(...)
+		return "url(" + JSON.stringify(newUrl) + ")";
+	});
+
+	// send back the fixed css
+	return fixedCss;
+};
+
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(1);
+__webpack_require__(14);
+__webpack_require__(15);
+__webpack_require__(16);
+__webpack_require__(26);
+__webpack_require__(37);
+__webpack_require__(38);
+module.exports = __webpack_require__(39);
+
+
+/***/ }),
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
@@ -14132,7 +14669,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 
 /***/ }),
-/* 11 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
@@ -15366,7 +15903,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 
 /***/ }),
-/* 12 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {// Generated by CoffeeScript 1.10.0
@@ -15374,13 +15911,13 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
   var Card, QJ, extend, payment,
     bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
-  __webpack_require__(13);
+  __webpack_require__(17);
 
   QJ = __webpack_require__(2);
 
-  payment = __webpack_require__(18);
+  payment = __webpack_require__(19);
 
-  extend = __webpack_require__(19);
+  extend = __webpack_require__(20);
 
   Card = (function() {
     var bindVal;
@@ -15724,13 +16261,13 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 13 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(14);
+var content = __webpack_require__(18);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -15738,7 +16275,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(16)(content, options);
+var update = __webpack_require__(11)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -15755,10 +16292,10 @@ if(false) {
 }
 
 /***/ }),
-/* 14 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(15)(false);
+exports = module.exports = __webpack_require__(10)(false);
 // imports
 
 
@@ -15769,543 +16306,7 @@ exports.push([module.i, ".jp-card.jp-card-safari.jp-card-identified .jp-card-fro
 
 
 /***/ }),
-/* 15 */
-/***/ (function(module, exports) {
-
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-// css base code, injected by the css-loader
-module.exports = function(useSourceMap) {
-	var list = [];
-
-	// return the list of modules as css string
-	list.toString = function toString() {
-		return this.map(function (item) {
-			var content = cssWithMappingToString(item, useSourceMap);
-			if(item[2]) {
-				return "@media " + item[2] + "{" + content + "}";
-			} else {
-				return content;
-			}
-		}).join("");
-	};
-
-	// import a list of modules into the list
-	list.i = function(modules, mediaQuery) {
-		if(typeof modules === "string")
-			modules = [[null, modules, ""]];
-		var alreadyImportedModules = {};
-		for(var i = 0; i < this.length; i++) {
-			var id = this[i][0];
-			if(typeof id === "number")
-				alreadyImportedModules[id] = true;
-		}
-		for(i = 0; i < modules.length; i++) {
-			var item = modules[i];
-			// skip already imported module
-			// this implementation is not 100% perfect for weird media query combinations
-			//  when a module is imported multiple times with different media queries.
-			//  I hope this will never occur (Hey this way we have smaller bundles)
-			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
-				if(mediaQuery && !item[2]) {
-					item[2] = mediaQuery;
-				} else if(mediaQuery) {
-					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
-				}
-				list.push(item);
-			}
-		}
-	};
-	return list;
-};
-
-function cssWithMappingToString(item, useSourceMap) {
-	var content = item[1] || '';
-	var cssMapping = item[3];
-	if (!cssMapping) {
-		return content;
-	}
-
-	if (useSourceMap && typeof btoa === 'function') {
-		var sourceMapping = toComment(cssMapping);
-		var sourceURLs = cssMapping.sources.map(function (source) {
-			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
-		});
-
-		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
-	}
-
-	return [content].join('\n');
-}
-
-// Adapted from convert-source-map (MIT)
-function toComment(sourceMap) {
-	// eslint-disable-next-line no-undef
-	var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
-	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
-
-	return '/*# ' + data + ' */';
-}
-
-
-/***/ }),
-/* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-
-var stylesInDom = {};
-
-var	memoize = function (fn) {
-	var memo;
-
-	return function () {
-		if (typeof memo === "undefined") memo = fn.apply(this, arguments);
-		return memo;
-	};
-};
-
-var isOldIE = memoize(function () {
-	// Test for IE <= 9 as proposed by Browserhacks
-	// @see http://browserhacks.com/#hack-e71d8692f65334173fee715c222cb805
-	// Tests for existence of standard globals is to allow style-loader
-	// to operate correctly into non-standard environments
-	// @see https://github.com/webpack-contrib/style-loader/issues/177
-	return window && document && document.all && !window.atob;
-});
-
-var getElement = (function (fn) {
-	var memo = {};
-
-	return function(selector) {
-		if (typeof memo[selector] === "undefined") {
-			memo[selector] = fn.call(this, selector);
-		}
-
-		return memo[selector]
-	};
-})(function (target) {
-	return document.querySelector(target)
-});
-
-var singleton = null;
-var	singletonCounter = 0;
-var	stylesInsertedAtTop = [];
-
-var	fixUrls = __webpack_require__(17);
-
-module.exports = function(list, options) {
-	if (typeof DEBUG !== "undefined" && DEBUG) {
-		if (typeof document !== "object") throw new Error("The style-loader cannot be used in a non-browser environment");
-	}
-
-	options = options || {};
-
-	options.attrs = typeof options.attrs === "object" ? options.attrs : {};
-
-	// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
-	// tags it will allow on a page
-	if (!options.singleton) options.singleton = isOldIE();
-
-	// By default, add <style> tags to the <head> element
-	if (!options.insertInto) options.insertInto = "head";
-
-	// By default, add <style> tags to the bottom of the target
-	if (!options.insertAt) options.insertAt = "bottom";
-
-	var styles = listToStyles(list, options);
-
-	addStylesToDom(styles, options);
-
-	return function update (newList) {
-		var mayRemove = [];
-
-		for (var i = 0; i < styles.length; i++) {
-			var item = styles[i];
-			var domStyle = stylesInDom[item.id];
-
-			domStyle.refs--;
-			mayRemove.push(domStyle);
-		}
-
-		if(newList) {
-			var newStyles = listToStyles(newList, options);
-			addStylesToDom(newStyles, options);
-		}
-
-		for (var i = 0; i < mayRemove.length; i++) {
-			var domStyle = mayRemove[i];
-
-			if(domStyle.refs === 0) {
-				for (var j = 0; j < domStyle.parts.length; j++) domStyle.parts[j]();
-
-				delete stylesInDom[domStyle.id];
-			}
-		}
-	};
-};
-
-function addStylesToDom (styles, options) {
-	for (var i = 0; i < styles.length; i++) {
-		var item = styles[i];
-		var domStyle = stylesInDom[item.id];
-
-		if(domStyle) {
-			domStyle.refs++;
-
-			for(var j = 0; j < domStyle.parts.length; j++) {
-				domStyle.parts[j](item.parts[j]);
-			}
-
-			for(; j < item.parts.length; j++) {
-				domStyle.parts.push(addStyle(item.parts[j], options));
-			}
-		} else {
-			var parts = [];
-
-			for(var j = 0; j < item.parts.length; j++) {
-				parts.push(addStyle(item.parts[j], options));
-			}
-
-			stylesInDom[item.id] = {id: item.id, refs: 1, parts: parts};
-		}
-	}
-}
-
-function listToStyles (list, options) {
-	var styles = [];
-	var newStyles = {};
-
-	for (var i = 0; i < list.length; i++) {
-		var item = list[i];
-		var id = options.base ? item[0] + options.base : item[0];
-		var css = item[1];
-		var media = item[2];
-		var sourceMap = item[3];
-		var part = {css: css, media: media, sourceMap: sourceMap};
-
-		if(!newStyles[id]) styles.push(newStyles[id] = {id: id, parts: [part]});
-		else newStyles[id].parts.push(part);
-	}
-
-	return styles;
-}
-
-function insertStyleElement (options, style) {
-	var target = getElement(options.insertInto)
-
-	if (!target) {
-		throw new Error("Couldn't find a style target. This probably means that the value for the 'insertInto' parameter is invalid.");
-	}
-
-	var lastStyleElementInsertedAtTop = stylesInsertedAtTop[stylesInsertedAtTop.length - 1];
-
-	if (options.insertAt === "top") {
-		if (!lastStyleElementInsertedAtTop) {
-			target.insertBefore(style, target.firstChild);
-		} else if (lastStyleElementInsertedAtTop.nextSibling) {
-			target.insertBefore(style, lastStyleElementInsertedAtTop.nextSibling);
-		} else {
-			target.appendChild(style);
-		}
-		stylesInsertedAtTop.push(style);
-	} else if (options.insertAt === "bottom") {
-		target.appendChild(style);
-	} else {
-		throw new Error("Invalid value for parameter 'insertAt'. Must be 'top' or 'bottom'.");
-	}
-}
-
-function removeStyleElement (style) {
-	if (style.parentNode === null) return false;
-	style.parentNode.removeChild(style);
-
-	var idx = stylesInsertedAtTop.indexOf(style);
-	if(idx >= 0) {
-		stylesInsertedAtTop.splice(idx, 1);
-	}
-}
-
-function createStyleElement (options) {
-	var style = document.createElement("style");
-
-	options.attrs.type = "text/css";
-
-	addAttrs(style, options.attrs);
-	insertStyleElement(options, style);
-
-	return style;
-}
-
-function createLinkElement (options) {
-	var link = document.createElement("link");
-
-	options.attrs.type = "text/css";
-	options.attrs.rel = "stylesheet";
-
-	addAttrs(link, options.attrs);
-	insertStyleElement(options, link);
-
-	return link;
-}
-
-function addAttrs (el, attrs) {
-	Object.keys(attrs).forEach(function (key) {
-		el.setAttribute(key, attrs[key]);
-	});
-}
-
-function addStyle (obj, options) {
-	var style, update, remove, result;
-
-	// If a transform function was defined, run it on the css
-	if (options.transform && obj.css) {
-	    result = options.transform(obj.css);
-
-	    if (result) {
-	    	// If transform returns a value, use that instead of the original css.
-	    	// This allows running runtime transformations on the css.
-	    	obj.css = result;
-	    } else {
-	    	// If the transform function returns a falsy value, don't add this css.
-	    	// This allows conditional loading of css
-	    	return function() {
-	    		// noop
-	    	};
-	    }
-	}
-
-	if (options.singleton) {
-		var styleIndex = singletonCounter++;
-
-		style = singleton || (singleton = createStyleElement(options));
-
-		update = applyToSingletonTag.bind(null, style, styleIndex, false);
-		remove = applyToSingletonTag.bind(null, style, styleIndex, true);
-
-	} else if (
-		obj.sourceMap &&
-		typeof URL === "function" &&
-		typeof URL.createObjectURL === "function" &&
-		typeof URL.revokeObjectURL === "function" &&
-		typeof Blob === "function" &&
-		typeof btoa === "function"
-	) {
-		style = createLinkElement(options);
-		update = updateLink.bind(null, style, options);
-		remove = function () {
-			removeStyleElement(style);
-
-			if(style.href) URL.revokeObjectURL(style.href);
-		};
-	} else {
-		style = createStyleElement(options);
-		update = applyToTag.bind(null, style);
-		remove = function () {
-			removeStyleElement(style);
-		};
-	}
-
-	update(obj);
-
-	return function updateStyle (newObj) {
-		if (newObj) {
-			if (
-				newObj.css === obj.css &&
-				newObj.media === obj.media &&
-				newObj.sourceMap === obj.sourceMap
-			) {
-				return;
-			}
-
-			update(obj = newObj);
-		} else {
-			remove();
-		}
-	};
-}
-
-var replaceText = (function () {
-	var textStore = [];
-
-	return function (index, replacement) {
-		textStore[index] = replacement;
-
-		return textStore.filter(Boolean).join('\n');
-	};
-})();
-
-function applyToSingletonTag (style, index, remove, obj) {
-	var css = remove ? "" : obj.css;
-
-	if (style.styleSheet) {
-		style.styleSheet.cssText = replaceText(index, css);
-	} else {
-		var cssNode = document.createTextNode(css);
-		var childNodes = style.childNodes;
-
-		if (childNodes[index]) style.removeChild(childNodes[index]);
-
-		if (childNodes.length) {
-			style.insertBefore(cssNode, childNodes[index]);
-		} else {
-			style.appendChild(cssNode);
-		}
-	}
-}
-
-function applyToTag (style, obj) {
-	var css = obj.css;
-	var media = obj.media;
-
-	if(media) {
-		style.setAttribute("media", media)
-	}
-
-	if(style.styleSheet) {
-		style.styleSheet.cssText = css;
-	} else {
-		while(style.firstChild) {
-			style.removeChild(style.firstChild);
-		}
-
-		style.appendChild(document.createTextNode(css));
-	}
-}
-
-function updateLink (link, options, obj) {
-	var css = obj.css;
-	var sourceMap = obj.sourceMap;
-
-	/*
-		If convertToAbsoluteUrls isn't defined, but sourcemaps are enabled
-		and there is no publicPath defined then lets turn convertToAbsoluteUrls
-		on by default.  Otherwise default to the convertToAbsoluteUrls option
-		directly
-	*/
-	var autoFixUrls = options.convertToAbsoluteUrls === undefined && sourceMap;
-
-	if (options.convertToAbsoluteUrls || autoFixUrls) {
-		css = fixUrls(css);
-	}
-
-	if (sourceMap) {
-		// http://stackoverflow.com/a/26603875
-		css += "\n/*# sourceMappingURL=data:application/json;base64," + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + " */";
-	}
-
-	var blob = new Blob([css], { type: "text/css" });
-
-	var oldSrc = link.href;
-
-	link.href = URL.createObjectURL(blob);
-
-	if(oldSrc) URL.revokeObjectURL(oldSrc);
-}
-
-
-/***/ }),
-/* 17 */
-/***/ (function(module, exports) {
-
-
-/**
- * When source maps are enabled, `style-loader` uses a link element with a data-uri to
- * embed the css on the page. This breaks all relative urls because now they are relative to a
- * bundle instead of the current page.
- *
- * One solution is to only use full urls, but that may be impossible.
- *
- * Instead, this function "fixes" the relative urls to be absolute according to the current page location.
- *
- * A rudimentary test suite is located at `test/fixUrls.js` and can be run via the `npm test` command.
- *
- */
-
-module.exports = function (css) {
-  // get current location
-  var location = typeof window !== "undefined" && window.location;
-
-  if (!location) {
-    throw new Error("fixUrls requires window.location");
-  }
-
-	// blank or null?
-	if (!css || typeof css !== "string") {
-	  return css;
-  }
-
-  var baseUrl = location.protocol + "//" + location.host;
-  var currentDir = baseUrl + location.pathname.replace(/\/[^\/]*$/, "/");
-
-	// convert each url(...)
-	/*
-	This regular expression is just a way to recursively match brackets within
-	a string.
-
-	 /url\s*\(  = Match on the word "url" with any whitespace after it and then a parens
-	   (  = Start a capturing group
-	     (?:  = Start a non-capturing group
-	         [^)(]  = Match anything that isn't a parentheses
-	         |  = OR
-	         \(  = Match a start parentheses
-	             (?:  = Start another non-capturing groups
-	                 [^)(]+  = Match anything that isn't a parentheses
-	                 |  = OR
-	                 \(  = Match a start parentheses
-	                     [^)(]*  = Match anything that isn't a parentheses
-	                 \)  = Match a end parentheses
-	             )  = End Group
-              *\) = Match anything and then a close parens
-          )  = Close non-capturing group
-          *  = Match anything
-       )  = Close capturing group
-	 \)  = Match a close parens
-
-	 /gi  = Get all matches, not the first.  Be case insensitive.
-	 */
-	var fixedCss = css.replace(/url\s*\(((?:[^)(]|\((?:[^)(]+|\([^)(]*\))*\))*)\)/gi, function(fullMatch, origUrl) {
-		// strip quotes (if they exist)
-		var unquotedOrigUrl = origUrl
-			.trim()
-			.replace(/^"(.*)"$/, function(o, $1){ return $1; })
-			.replace(/^'(.*)'$/, function(o, $1){ return $1; });
-
-		// already a full url? no change
-		if (/^(#|data:|http:\/\/|https:\/\/|file:\/\/\/)/i.test(unquotedOrigUrl)) {
-		  return fullMatch;
-		}
-
-		// convert the url to a full url
-		var newUrl;
-
-		if (unquotedOrigUrl.indexOf("//") === 0) {
-		  	//TODO: should we add protocol?
-			newUrl = unquotedOrigUrl;
-		} else if (unquotedOrigUrl.indexOf("/") === 0) {
-			// path should be relative to the base url
-			newUrl = baseUrl + unquotedOrigUrl; // already starts with '/'
-		} else {
-			// path should be relative to current directory
-			newUrl = currentDir + unquotedOrigUrl.replace(/^\.\//, ""); // Strip leading './'
-		}
-
-		// send back the fixed url(...)
-		return "url(" + JSON.stringify(newUrl) + ")";
-	});
-
-	// send back the fixed css
-	return fixedCss;
-};
-
-
-/***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {// Generated by CoffeeScript 1.10.0
@@ -16948,17 +16949,17 @@ module.exports = function (css) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-module.exports = __webpack_require__(20);
+module.exports = __webpack_require__(21);
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16973,8 +16974,8 @@ module.exports = __webpack_require__(20);
  * @fileoverview
  * Port of jQuery.extend that actually works on node.js
  */
-var is = __webpack_require__(21);
-var has = __webpack_require__(22);
+var is = __webpack_require__(22);
+var has = __webpack_require__(23);
 
 var defineProperty = Object.defineProperty;
 var gOPD = Object.getOwnPropertyDescriptor;
@@ -17082,7 +17083,7 @@ module.exports = extend;
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17907,31 +17908,31 @@ module.exports = is;
 
 
 /***/ }),
-/* 22 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var bind = __webpack_require__(23);
-
-module.exports = bind.call(Function.call, Object.prototype.hasOwnProperty);
-
-
-/***/ }),
 /* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var implementation = __webpack_require__(24);
+var bind = __webpack_require__(24);
+
+module.exports = bind.call(Function.call, Object.prototype.hasOwnProperty);
+
+
+/***/ }),
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var implementation = __webpack_require__(25);
 
 module.exports = Function.prototype.bind || implementation;
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17990,7 +17991,7 @@ module.exports = function bind(that) {
 
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17998,7 +17999,7 @@ module.exports = function bind(that) {
 
 var crossvent = __webpack_require__(3);
 var throttle = __webpack_require__(4);
-var tailormade = __webpack_require__(28);
+var tailormade = __webpack_require__(29);
 
 function bullseye (el, target, options) {
   var o = options;
@@ -18084,7 +18085,7 @@ module.exports = bullseye;
 
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {
@@ -18139,7 +18140,7 @@ function CustomEvent (type, params) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18160,15 +18161,15 @@ module.exports = eventmap;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(global) {
 
-var sell = __webpack_require__(29);
+var sell = __webpack_require__(30);
 var crossvent = __webpack_require__(3);
-var seleccion = __webpack_require__(30);
+var seleccion = __webpack_require__(31);
 var throttle = __webpack_require__(4);
 var getSelection = seleccion.get;
 var props = [
@@ -18344,7 +18345,7 @@ module.exports = tailormade;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18447,14 +18448,14 @@ module.exports = sell;
 
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var getSelection = __webpack_require__(5);
-var setSelection = __webpack_require__(35);
+var setSelection = __webpack_require__(36);
 
 module.exports = {
   get: getSelection,
@@ -18463,7 +18464,7 @@ module.exports = {
 
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18478,7 +18479,7 @@ module.exports = getSelectionRaw;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18497,7 +18498,7 @@ module.exports = getSelectionNullOp;
 
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18755,7 +18756,7 @@ module.exports = getSelection;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18791,7 +18792,7 @@ module.exports = {
 
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -18834,19 +18835,647 @@ module.exports = setSelection;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 36 */
-/***/ (function(module, exports) {
-
-throw new Error("Module build failed: Error: ENOENT: no such file or directory, open 'C:\\xampp\\htdocs\\metrocinemas\\node_modules\\jquery-zoom\\jquery.zoom.js'");
-
-/***/ }),
 /* 37 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-throw new Error("Module build failed: Error: ENOENT: no such file or directory, open 'C:\\xampp\\htdocs\\metrocinemas\\node_modules\\jquery-match-height\\dist\\jquery.matchHeight.js'");
+/* WEBPACK VAR INJECTION */(function(__webpack_provided_window_dot_jQuery) {/*!
+	Zoom 1.7.21
+	license: MIT
+	http://www.jacklmoore.com/zoom
+*/
+(function ($) {
+	var defaults = {
+		url: false,
+		callback: false,
+		target: false,
+		duration: 120,
+		on: 'mouseover', // other options: grab, click, toggle
+		touch: true, // enables a touch fallback
+		onZoomIn: false,
+		onZoomOut: false,
+		magnify: 1
+	};
+
+	// Core Zoom Logic, independent of event listeners.
+	$.zoom = function(target, source, img, magnify) {
+		var targetHeight,
+			targetWidth,
+			sourceHeight,
+			sourceWidth,
+			xRatio,
+			yRatio,
+			offset,
+			$target = $(target),
+			position = $target.css('position'),
+			$source = $(source);
+
+		// The parent element needs positioning so that the zoomed element can be correctly positioned within.
+		target.style.position = /(absolute|fixed)/.test(position) ? position : 'relative';
+		target.style.overflow = 'hidden';
+		img.style.width = img.style.height = '';
+
+		$(img)
+			.addClass('zoomImg')
+			.css({
+				position: 'absolute',
+				top: 0,
+				left: 0,
+				opacity: 0,
+				width: img.width * magnify,
+				height: img.height * magnify,
+				border: 'none',
+				maxWidth: 'none',
+				maxHeight: 'none'
+			})
+			.appendTo(target);
+
+		return {
+			init: function() {
+				targetWidth = $target.outerWidth();
+				targetHeight = $target.outerHeight();
+
+				if (source === target) {
+					sourceWidth = targetWidth;
+					sourceHeight = targetHeight;
+				} else {
+					sourceWidth = $source.outerWidth();
+					sourceHeight = $source.outerHeight();
+				}
+
+				xRatio = (img.width - targetWidth) / sourceWidth;
+				yRatio = (img.height - targetHeight) / sourceHeight;
+
+				offset = $source.offset();
+			},
+			move: function (e) {
+				var left = (e.pageX - offset.left),
+					top = (e.pageY - offset.top);
+
+				top = Math.max(Math.min(top, sourceHeight), 0);
+				left = Math.max(Math.min(left, sourceWidth), 0);
+
+				img.style.left = (left * -xRatio) + 'px';
+				img.style.top = (top * -yRatio) + 'px';
+			}
+		};
+	};
+
+	$.fn.zoom = function (options) {
+		return this.each(function () {
+			var
+			settings = $.extend({}, defaults, options || {}),
+			//target will display the zoomed image
+			target = settings.target && $(settings.target)[0] || this,
+			//source will provide zoom location info (thumbnail)
+			source = this,
+			$source = $(source),
+			img = document.createElement('img'),
+			$img = $(img),
+			mousemove = 'mousemove.zoom',
+			clicked = false,
+			touched = false;
+
+			// If a url wasn't specified, look for an image element.
+			if (!settings.url) {
+				var srcElement = source.querySelector('img');
+				if (srcElement) {
+					settings.url = srcElement.getAttribute('data-src') || srcElement.currentSrc || srcElement.src;
+				}
+				if (!settings.url) {
+					return;
+				}
+			}
+
+			$source.one('zoom.destroy', function(position, overflow){
+				$source.off(".zoom");
+				target.style.position = position;
+				target.style.overflow = overflow;
+				img.onload = null;
+				$img.remove();
+			}.bind(this, target.style.position, target.style.overflow));
+
+			img.onload = function () {
+				var zoom = $.zoom(target, source, img, settings.magnify);
+
+				function start(e) {
+					zoom.init();
+					zoom.move(e);
+
+					// Skip the fade-in for IE8 and lower since it chokes on fading-in
+					// and changing position based on mousemovement at the same time.
+					$img.stop()
+					.fadeTo($.support.opacity ? settings.duration : 0, 1, $.isFunction(settings.onZoomIn) ? settings.onZoomIn.call(img) : false);
+				}
+
+				function stop() {
+					$img.stop()
+					.fadeTo(settings.duration, 0, $.isFunction(settings.onZoomOut) ? settings.onZoomOut.call(img) : false);
+				}
+
+				// Mouse events
+				if (settings.on === 'grab') {
+					$source
+						.on('mousedown.zoom',
+							function (e) {
+								if (e.which === 1) {
+									$(document).one('mouseup.zoom',
+										function () {
+											stop();
+
+											$(document).off(mousemove, zoom.move);
+										}
+									);
+
+									start(e);
+
+									$(document).on(mousemove, zoom.move);
+
+									e.preventDefault();
+								}
+							}
+						);
+				} else if (settings.on === 'click') {
+					$source.on('click.zoom',
+						function (e) {
+							if (clicked) {
+								// bubble the event up to the document to trigger the unbind.
+								return;
+							} else {
+								clicked = true;
+								start(e);
+								$(document).on(mousemove, zoom.move);
+								$(document).one('click.zoom',
+									function () {
+										stop();
+										clicked = false;
+										$(document).off(mousemove, zoom.move);
+									}
+								);
+								return false;
+							}
+						}
+					);
+				} else if (settings.on === 'toggle') {
+					$source.on('click.zoom',
+						function (e) {
+							if (clicked) {
+								stop();
+							} else {
+								start(e);
+							}
+							clicked = !clicked;
+						}
+					);
+				} else if (settings.on === 'mouseover') {
+					zoom.init(); // Preemptively call init because IE7 will fire the mousemove handler before the hover handler.
+
+					$source
+						.on('mouseenter.zoom', start)
+						.on('mouseleave.zoom', stop)
+						.on(mousemove, zoom.move);
+				}
+
+				// Touch fallback
+				if (settings.touch) {
+					$source
+						.on('touchstart.zoom', function (e) {
+							e.preventDefault();
+							if (touched) {
+								touched = false;
+								stop();
+							} else {
+								touched = true;
+								start( e.originalEvent.touches[0] || e.originalEvent.changedTouches[0] );
+							}
+						})
+						.on('touchmove.zoom', function (e) {
+							e.preventDefault();
+							zoom.move( e.originalEvent.touches[0] || e.originalEvent.changedTouches[0] );
+						})
+						.on('touchend.zoom', function (e) {
+							e.preventDefault();
+							if (touched) {
+								touched = false;
+								stop();
+							}
+						});
+				}
+				
+				if ($.isFunction(settings.callback)) {
+					settings.callback.call(img);
+				}
+			};
+
+			img.setAttribute('role', 'presentation');
+			img.alt = '';
+			img.src = settings.url;
+		});
+	};
+
+	$.fn.zoom.defaults = defaults;
+}(__webpack_provided_window_dot_jQuery));
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
 /* 38 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
+* jquery-match-height 0.7.2 by @liabru
+* http://brm.io/jquery-match-height/
+* License: MIT
+*/
+
+;(function(factory) { // eslint-disable-line no-extra-semi
+    'use strict';
+    if (true) {
+        // AMD
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(1)], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+    } else if (typeof module !== 'undefined' && module.exports) {
+        // CommonJS
+        module.exports = factory(require('jquery'));
+    } else {
+        // Global
+        factory(jQuery);
+    }
+})(function($) {
+    /*
+    *  internal
+    */
+
+    var _previousResizeWidth = -1,
+        _updateTimeout = -1;
+
+    /*
+    *  _parse
+    *  value parse utility function
+    */
+
+    var _parse = function(value) {
+        // parse value and convert NaN to 0
+        return parseFloat(value) || 0;
+    };
+
+    /*
+    *  _rows
+    *  utility function returns array of jQuery selections representing each row
+    *  (as displayed after float wrapping applied by browser)
+    */
+
+    var _rows = function(elements) {
+        var tolerance = 1,
+            $elements = $(elements),
+            lastTop = null,
+            rows = [];
+
+        // group elements by their top position
+        $elements.each(function(){
+            var $that = $(this),
+                top = $that.offset().top - _parse($that.css('margin-top')),
+                lastRow = rows.length > 0 ? rows[rows.length - 1] : null;
+
+            if (lastRow === null) {
+                // first item on the row, so just push it
+                rows.push($that);
+            } else {
+                // if the row top is the same, add to the row group
+                if (Math.floor(Math.abs(lastTop - top)) <= tolerance) {
+                    rows[rows.length - 1] = lastRow.add($that);
+                } else {
+                    // otherwise start a new row group
+                    rows.push($that);
+                }
+            }
+
+            // keep track of the last row top
+            lastTop = top;
+        });
+
+        return rows;
+    };
+
+    /*
+    *  _parseOptions
+    *  handle plugin options
+    */
+
+    var _parseOptions = function(options) {
+        var opts = {
+            byRow: true,
+            property: 'height',
+            target: null,
+            remove: false
+        };
+
+        if (typeof options === 'object') {
+            return $.extend(opts, options);
+        }
+
+        if (typeof options === 'boolean') {
+            opts.byRow = options;
+        } else if (options === 'remove') {
+            opts.remove = true;
+        }
+
+        return opts;
+    };
+
+    /*
+    *  matchHeight
+    *  plugin definition
+    */
+
+    var matchHeight = $.fn.matchHeight = function(options) {
+        var opts = _parseOptions(options);
+
+        // handle remove
+        if (opts.remove) {
+            var that = this;
+
+            // remove fixed height from all selected elements
+            this.css(opts.property, '');
+
+            // remove selected elements from all groups
+            $.each(matchHeight._groups, function(key, group) {
+                group.elements = group.elements.not(that);
+            });
+
+            // TODO: cleanup empty groups
+
+            return this;
+        }
+
+        if (this.length <= 1 && !opts.target) {
+            return this;
+        }
+
+        // keep track of this group so we can re-apply later on load and resize events
+        matchHeight._groups.push({
+            elements: this,
+            options: opts
+        });
+
+        // match each element's height to the tallest element in the selection
+        matchHeight._apply(this, opts);
+
+        return this;
+    };
+
+    /*
+    *  plugin global options
+    */
+
+    matchHeight.version = '0.7.2';
+    matchHeight._groups = [];
+    matchHeight._throttle = 80;
+    matchHeight._maintainScroll = false;
+    matchHeight._beforeUpdate = null;
+    matchHeight._afterUpdate = null;
+    matchHeight._rows = _rows;
+    matchHeight._parse = _parse;
+    matchHeight._parseOptions = _parseOptions;
+
+    /*
+    *  matchHeight._apply
+    *  apply matchHeight to given elements
+    */
+
+    matchHeight._apply = function(elements, options) {
+        var opts = _parseOptions(options),
+            $elements = $(elements),
+            rows = [$elements];
+
+        // take note of scroll position
+        var scrollTop = $(window).scrollTop(),
+            htmlHeight = $('html').outerHeight(true);
+
+        // get hidden parents
+        var $hiddenParents = $elements.parents().filter(':hidden');
+
+        // cache the original inline style
+        $hiddenParents.each(function() {
+            var $that = $(this);
+            $that.data('style-cache', $that.attr('style'));
+        });
+
+        // temporarily must force hidden parents visible
+        $hiddenParents.css('display', 'block');
+
+        // get rows if using byRow, otherwise assume one row
+        if (opts.byRow && !opts.target) {
+
+            // must first force an arbitrary equal height so floating elements break evenly
+            $elements.each(function() {
+                var $that = $(this),
+                    display = $that.css('display');
+
+                // temporarily force a usable display value
+                if (display !== 'inline-block' && display !== 'flex' && display !== 'inline-flex') {
+                    display = 'block';
+                }
+
+                // cache the original inline style
+                $that.data('style-cache', $that.attr('style'));
+
+                $that.css({
+                    'display': display,
+                    'padding-top': '0',
+                    'padding-bottom': '0',
+                    'margin-top': '0',
+                    'margin-bottom': '0',
+                    'border-top-width': '0',
+                    'border-bottom-width': '0',
+                    'height': '100px',
+                    'overflow': 'hidden'
+                });
+            });
+
+            // get the array of rows (based on element top position)
+            rows = _rows($elements);
+
+            // revert original inline styles
+            $elements.each(function() {
+                var $that = $(this);
+                $that.attr('style', $that.data('style-cache') || '');
+            });
+        }
+
+        $.each(rows, function(key, row) {
+            var $row = $(row),
+                targetHeight = 0;
+
+            if (!opts.target) {
+                // skip apply to rows with only one item
+                if (opts.byRow && $row.length <= 1) {
+                    $row.css(opts.property, '');
+                    return;
+                }
+
+                // iterate the row and find the max height
+                $row.each(function(){
+                    var $that = $(this),
+                        style = $that.attr('style'),
+                        display = $that.css('display');
+
+                    // temporarily force a usable display value
+                    if (display !== 'inline-block' && display !== 'flex' && display !== 'inline-flex') {
+                        display = 'block';
+                    }
+
+                    // ensure we get the correct actual height (and not a previously set height value)
+                    var css = { 'display': display };
+                    css[opts.property] = '';
+                    $that.css(css);
+
+                    // find the max height (including padding, but not margin)
+                    if ($that.outerHeight(false) > targetHeight) {
+                        targetHeight = $that.outerHeight(false);
+                    }
+
+                    // revert styles
+                    if (style) {
+                        $that.attr('style', style);
+                    } else {
+                        $that.css('display', '');
+                    }
+                });
+            } else {
+                // if target set, use the height of the target element
+                targetHeight = opts.target.outerHeight(false);
+            }
+
+            // iterate the row and apply the height to all elements
+            $row.each(function(){
+                var $that = $(this),
+                    verticalPadding = 0;
+
+                // don't apply to a target
+                if (opts.target && $that.is(opts.target)) {
+                    return;
+                }
+
+                // handle padding and border correctly (required when not using border-box)
+                if ($that.css('box-sizing') !== 'border-box') {
+                    verticalPadding += _parse($that.css('border-top-width')) + _parse($that.css('border-bottom-width'));
+                    verticalPadding += _parse($that.css('padding-top')) + _parse($that.css('padding-bottom'));
+                }
+
+                // set the height (accounting for padding and border)
+                $that.css(opts.property, (targetHeight - verticalPadding) + 'px');
+            });
+        });
+
+        // revert hidden parents
+        $hiddenParents.each(function() {
+            var $that = $(this);
+            $that.attr('style', $that.data('style-cache') || null);
+        });
+
+        // restore scroll position if enabled
+        if (matchHeight._maintainScroll) {
+            $(window).scrollTop((scrollTop / htmlHeight) * $('html').outerHeight(true));
+        }
+
+        return this;
+    };
+
+    /*
+    *  matchHeight._applyDataApi
+    *  applies matchHeight to all elements with a data-match-height attribute
+    */
+
+    matchHeight._applyDataApi = function() {
+        var groups = {};
+
+        // generate groups by their groupId set by elements using data-match-height
+        $('[data-match-height], [data-mh]').each(function() {
+            var $this = $(this),
+                groupId = $this.attr('data-mh') || $this.attr('data-match-height');
+
+            if (groupId in groups) {
+                groups[groupId] = groups[groupId].add($this);
+            } else {
+                groups[groupId] = $this;
+            }
+        });
+
+        // apply matchHeight to each group
+        $.each(groups, function() {
+            this.matchHeight(true);
+        });
+    };
+
+    /*
+    *  matchHeight._update
+    *  updates matchHeight on all current groups with their correct options
+    */
+
+    var _update = function(event) {
+        if (matchHeight._beforeUpdate) {
+            matchHeight._beforeUpdate(event, matchHeight._groups);
+        }
+
+        $.each(matchHeight._groups, function() {
+            matchHeight._apply(this.elements, this.options);
+        });
+
+        if (matchHeight._afterUpdate) {
+            matchHeight._afterUpdate(event, matchHeight._groups);
+        }
+    };
+
+    matchHeight._update = function(throttle, event) {
+        // prevent update if fired from a resize event
+        // where the viewport width hasn't actually changed
+        // fixes an event looping bug in IE8
+        if (event && event.type === 'resize') {
+            var windowWidth = $(window).width();
+            if (windowWidth === _previousResizeWidth) {
+                return;
+            }
+            _previousResizeWidth = windowWidth;
+        }
+
+        // throttle updates
+        if (!throttle) {
+            _update(event);
+        } else if (_updateTimeout === -1) {
+            _updateTimeout = setTimeout(function() {
+                _update(event);
+                _updateTimeout = -1;
+            }, matchHeight._throttle);
+        }
+    };
+
+    /*
+    *  bind events
+    */
+
+    // apply on DOM ready event
+    $(matchHeight._applyDataApi);
+
+    // use on or bind where supported
+    var on = $.fn.on ? 'on' : 'bind';
+
+    // update heights on load and resize events
+    $(window)[on]('load', function(event) {
+        matchHeight._update(false, event);
+    });
+
+    // throttled update heights on resize events
+    $(window)[on]('resize orientationchange', function(event) {
+        matchHeight._update(true, event);
+    });
+
+});
+
+
+/***/ }),
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -18968,4 +19597,4 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 
 /***/ })
-],[9]);
+],[13]);

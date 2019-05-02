@@ -1,13 +1,15 @@
 header
-	a(href="#")
+	a(href="/")
 		img(src="/img/logo_metrocinemas.png")
-	form.buscar
-		input(type="text" name="p" placeholder="Buscar Película..." required)
+	form.buscar(method="get" action="/buscar")
+		input(type="text" name="q" placeholder="Buscar Película..." required)
 		button(type="submit")
 			i.fas.fa-search
 	nav
 		ul
 			li
-				a(href="#") Inicio
+				a(href="/") Inicio
 			li
-				a(href="#") Cartelera
+				a(href="cartelera") Cartelera
+			li
+				a(href="funciones") Funciones

@@ -8,6 +8,7 @@ use Backpack\CRUD\app\Http\Controllers\CrudController;
 use App\Http\Requests\MovieRequest as StoreRequest;
 use App\Http\Requests\MovieRequest as UpdateRequest;
 use Backpack\CRUD\CrudPanel;
+use Illuminate\Support\Str;
 
 /**
  * Class MovieCrudController
@@ -68,7 +69,7 @@ class MovieCrudController extends CrudController
         ]);
 
         $this->crud->addField([
-            'label' => "Poster (<a href='https://www.lahiguera.net/cinemania/'>Descargar de aquí</a>)",
+            'label' => "Poster (<a href='https://www.filmaffinity.com/mx/main.html'>Descargar de aquí</a>)",
             'name' => 'poster',
             'type' => 'image',
             'upload' => true,
@@ -90,6 +91,15 @@ class MovieCrudController extends CrudController
             'entity' => 'director',
             'attribute' => 'name',
             'model' => 'App\Models\Director',
+        ]);
+
+        $this->crud->addField([
+            'label' => "Género",
+            'name' => 'genre_id',
+            'type' => 'select2',
+            'entity' => 'genre',
+            'attribute' => 'name',
+            'model' => 'App\Models\Genre',
         ]);
 
         $this->crud->addColumn([
@@ -117,6 +127,9 @@ class MovieCrudController extends CrudController
 
     public function store(StoreRequest $request)
     {
+        $name = $request->request->get('name');
+        $slug = Str::slug($name, '-');
+        $request->request->set('slug', $slug);
         // your additional operations before save here
         $redirect_location = parent::storeCrud($request);
         // your additional operations after save here
@@ -126,6 +139,9 @@ class MovieCrudController extends CrudController
 
     public function update(UpdateRequest $request)
     {
+        $name = $request->request->get('name');
+        $slug = Str::slug($name, '-');
+        $request->request->set('slug', $slug);
         // your additional operations before save here
         $redirect_location = parent::updateCrud($request);
         // your additional operations after save here

@@ -2,4 +2,10 @@ html, body {
 	margin: 0;
 	font-family: 'Raleway';
 	font-size: 17px;
+	background-color: #FFED4A;
+	.slick-next, .slick-prev {
+		&:before {
+			color: #3D4852;
+		}
+	} 
 }

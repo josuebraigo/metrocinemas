@@ -2,14 +2,17 @@ doctype
 html
 	head
 		include include/head
-	body
+	body#home
 		include include/header
+		h1
+			a(href="cartelera") Ver cartelera completa
 		.peliculas
 			@foreach($movies as $movie)
 			.pelicula
-				img(src!="{{ $movie->poster }}")
+				a(href!="pelicula/{{$movie->slug}}")
+					img(src!="{{ $movie->poster }}")
 				h2 {{ $movie->name }}
-				a(href="#") Comprar boletos
+				a.boton(href!="funciones/{{$movie->slug}}") Comprar boletos
 			@endforeach
 		.ubicanos
 			#map

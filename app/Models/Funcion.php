@@ -36,13 +36,13 @@ class Funcion extends Model
     */
     public function movie() {
 
-        return $this->hasOne('App\Models\Movie');
+        return $this->belongsTo('App\Models\Movie');
 
     }
 
     public function room() {
         
-        return $this->hasOne('App\Models\Room');
+        return $this->belongsTo('App\Models\Room');
 
     }
     /*
