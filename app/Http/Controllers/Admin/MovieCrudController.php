@@ -130,9 +130,6 @@ class MovieCrudController extends CrudController
 
     public function store(StoreRequest $request)
     {
-        $name = $request->request->get('name');
-        $slug = Str::slug($name, '-');
-        $request->request->set('slug', $slug);
         // your additional operations before save here
         $redirect_location = parent::storeCrud($request);
         // your additional operations after save here
@@ -142,9 +139,6 @@ class MovieCrudController extends CrudController
 
     public function update(UpdateRequest $request)
     {
-        $name = $request->request->get('name');
-        $slug = Str::slug($name, '-');
-        $request->request->set('slug', $slug);
         // your additional operations before save here
         $redirect_location = parent::updateCrud($request);
         // your additional operations after save here

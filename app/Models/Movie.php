@@ -5,11 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Backpack\CRUD\CrudTrait;
 use Laravel\Scout\Searchable;
+use Cviebrock\EloquentSluggable\Sluggable;
 
 class Movie extends Model
 {
     use CrudTrait;
     use Searchable;
+    use Sluggable;
 
     /*
     |--------------------------------------------------------------------------
@@ -30,6 +32,15 @@ class Movie extends Model
     | FUNCTIONS
     |--------------------------------------------------------------------------
     */
+
+    public function sluggable()
+    {
+        return [
+            'slug' => [
+                'source' => 'name'
+            ]
+        ];
+    }
 
     /*
     |--------------------------------------------------------------------------
