@@ -174,9 +174,6 @@ class MovieCrudController extends CrudController
         // your additional operations after save here
         // use $this->data['entry'] or $this->crud->entry
 
-        /*$movie = Movie::find($this->crud->entry->id);
-        dd($movie->tasks()->getRelatedIds());*/
-
         return $redirect_location;
     }
 
