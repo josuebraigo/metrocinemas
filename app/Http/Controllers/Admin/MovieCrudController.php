@@ -68,7 +68,7 @@ class MovieCrudController extends CrudController
            'name' => 'countrie_id', // the db column for the foreign key
            'entity' => 'countrie', // the method that defines the relationship in your Model
            'attribute' => 'name', // foreign key attribute that is shown to user
-           'model' => "App\Models\Countrie", // foreign key model
+           'model' => "App\Models\Country", // foreign key model
            'wrapperAttributes' => [
                'class' => 'form-group col-md-6'
            ],
@@ -167,10 +167,6 @@ class MovieCrudController extends CrudController
 
     public function store(StoreRequest $request)
     {
-        //dd($request->request);
-        $name = $request->request->get('name');
-        $slug = Str::slug($name, '-');
-        $request->request->set('slug', $slug);
         // your additional operations before save here
         $redirect_location = parent::storeCrud($request);
         // your additional operations after save here
@@ -180,9 +176,6 @@ class MovieCrudController extends CrudController
 
     public function update(UpdateRequest $request)
     {
-        $name = $request->request->get('name');
-        $slug = Str::slug($name, '-');
-        $request->request->set('slug', $slug);
         // your additional operations before save here
         $redirect_location = parent::updateCrud($request);
         // your additional operations after save here

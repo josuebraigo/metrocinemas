@@ -21,7 +21,7 @@ class Movie extends Model
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     //protected $guarded = ['id'];
-    protected $fillable = ['countrie_id'];
+    protected $fillable = ['name', 'countrie_id', ''];
     // protected $hidden = [];
     // protected $dates = [];
 
@@ -53,8 +53,8 @@ class Movie extends Model
         return $this->belongsToMany('App\Models\Genre')->withTimestamps();
     }
 
-    public function countrie(){
-      return $this->belongsTo('App\Models\Countrie');
+    public function country(){
+      return $this->belongsTo('App\Models\Country');
     }
 
     /*

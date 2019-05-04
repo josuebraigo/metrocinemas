@@ -28,8 +28,8 @@ class CreateMoviesTable extends Migration
             $table->unsignedBigInteger('director_id')->nullable();
             $table->foreign('director_id')->references('id')->on('directors')->onDelete('restrict');
 
-            $table->unsignedBigInteger('countrie_id')->nullable();
-            $table->foreign('countrie_id')->references('id')->on('countries')->onDelete('restrict');
+            $table->unsignedBigInteger('country_id')->nullable();
+            $table->foreign('country_id')->references('id')->on('countries')->onDelete('restrict');
 
             $table->timestamps();
             $table->softDeletes();
