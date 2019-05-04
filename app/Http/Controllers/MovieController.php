@@ -39,7 +39,7 @@ class MovieController extends Controller
         $movies = array();
         foreach($functions as $function) {
             $flag = Arr::has($movies, $function->movie->id);
-            if(!$flag){ 
+            if(!$flag){
                 $movies[] = Movie::find($function->movie->id);
             }
         }

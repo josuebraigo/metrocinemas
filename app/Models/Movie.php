@@ -9,7 +9,7 @@ use Laravel\Scout\Searchable;
 class Movie extends Model
 {
     use CrudTrait;
-    use Searchable;
+    //use Searchable;
 
     /*
     |--------------------------------------------------------------------------
@@ -20,8 +20,8 @@ class Movie extends Model
     protected $table = 'movies';
     // protected $primaryKey = 'id';
     // public $timestamps = false;
-    //protected $guarded = ['id'];
-    protected $fillable = ['name', 'countrie_id', ''];
+    protected $guarded = ['id'];
+    //protected $fillable = ['name', 'country_id', ''];
     // protected $hidden = [];
     // protected $dates = [];
 
