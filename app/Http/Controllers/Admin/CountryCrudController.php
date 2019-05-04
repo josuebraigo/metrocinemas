@@ -5,16 +5,16 @@ namespace App\Http\Controllers\Admin;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 
 // VALIDATION: change the requests to match your own file names if you need form validation
-use App\Http\Requests\CountrieRequest as StoreRequest;
-use App\Http\Requests\CountrieRequest as UpdateRequest;
+use App\Http\Requests\CountryRequest as StoreRequest;
+use App\Http\Requests\CountryRequest as UpdateRequest;
 use Backpack\CRUD\CrudPanel;
 
 /**
- * Class CountrieCrudController
+ * Class CountryCrudController
  * @package App\Http\Controllers\Admin
  * @property-read CrudPanel $crud
  */
-class CountrieCrudController extends CrudController
+class CountryCrudController extends CrudController
 {
     public function setup()
     {
@@ -23,9 +23,9 @@ class CountrieCrudController extends CrudController
         | CrudPanel Basic Information
         |--------------------------------------------------------------------------
         */
-        $this->crud->setModel('App\Models\Countrie');
-        $this->crud->setRoute(config('backpack.base.route_prefix') . '/countrie');
-        $this->crud->setEntityNameStrings('countrie', 'countries');
+        $this->crud->setModel('App\Models\Country');
+        $this->crud->setRoute(config('backpack.base.route_prefix') . '/country');
+        $this->crud->setEntityNameStrings('country', 'countries');
 
         /*
         |--------------------------------------------------------------------------
@@ -36,7 +36,7 @@ class CountrieCrudController extends CrudController
         // TODO: remove setFromDb() and manually define Fields and Columns
         $this->crud->setFromDb();
 
-        // add asterisk for fields that are required in CountrieRequest
+        // add asterisk for fields that are required in CountryRequest
         $this->crud->setRequiredFields(StoreRequest::class, 'create');
         $this->crud->setRequiredFields(UpdateRequest::class, 'edit');
     }

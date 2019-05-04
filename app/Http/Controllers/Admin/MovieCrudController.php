@@ -65,10 +65,10 @@ class MovieCrudController extends CrudController
         $this->crud->addField([  // Select2
            'label' => "País",
            'type' => 'select2',
-           'name' => 'countrie_id', // the db column for the foreign key
-           'entity' => 'countrie', // the method that defines the relationship in your Model
+           'name' => 'country_id', // the db column for the foreign key
+           'entity' => 'country', // the method that defines the relationship in your Model
            'attribute' => 'name', // foreign key attribute that is shown to user
-           'model' => "App\Models\Countrie", // foreign key model
+           'model' => "App\Models\Country", // foreign key model
            'wrapperAttributes' => [
                'class' => 'form-group col-md-6'
            ],
@@ -167,10 +167,16 @@ class MovieCrudController extends CrudController
 
     public function store(StoreRequest $request)
     {
+        //dd($request->request);
+        $request->request->set('slug', 'slug');
         // your additional operations before save here
         $redirect_location = parent::storeCrud($request);
         // your additional operations after save here
         // use $this->data['entry'] or $this->crud->entry
+
+        /*$movie = Movie::find($this->crud->entry->id);
+        dd($movie->tasks()->getRelatedIds());*/
+
         return $redirect_location;
     }
 

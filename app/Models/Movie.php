@@ -5,13 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Backpack\CRUD\CrudTrait;
 use Laravel\Scout\Searchable;
-use Cviebrock\EloquentSluggable\Sluggable;
 
 class Movie extends Model
 {
     use CrudTrait;
-    use Searchable;
-    use Sluggable;
+    //use Searchable;
 
     /*
     |--------------------------------------------------------------------------
@@ -23,7 +21,7 @@ class Movie extends Model
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
-    // protected $fillable = [];
+    //protected $fillable = ['name', 'country_id', ''];
     // protected $hidden = [];
     // protected $dates = [];
 
@@ -32,15 +30,6 @@ class Movie extends Model
     | FUNCTIONS
     |--------------------------------------------------------------------------
     */
-
-    public function sluggable()
-    {
-        return [
-            'slug' => [
-                'source' => 'name'
-            ]
-        ];
-    }
 
     /*
     |--------------------------------------------------------------------------
@@ -64,8 +53,8 @@ class Movie extends Model
         return $this->belongsToMany('App\Models\Genre')->withTimestamps();
     }
 
-    public function countrie(){
-      return $this->belongsTo('App\Models\Countrie');
+    public function country(){
+      return $this->belongsTo('App\Models\Country');
     }
 
     /*
