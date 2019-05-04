@@ -13,26 +13,26 @@ class FunctionsTableSeeder extends Seeder
     public function run()
     {
         $function = new Funcion();
-        $function->movie->id = '1';
-        $function->room->id = '2';
+        $function->movie_id = '1';
+        $function->room_id = '2';
        	$function->schedule = '10:30:00';
        	$function->save();
 
        	$function = new Funcion();
-        $function->movie->id = '2';
-        $function->room->id = '4';
+        $function->movie_id = '2';
+        $function->room_id = '4';
        	$function->schedule = '12:15:00';
-       	$function->save(); 
+       	$function->save();
 
        	$function = new Funcion();
-        $function->movie->id = '1';
-        $function->room->id = '2';
+        $function->movie_id = '1';
+        $function->room_id = '2';
        	$function->schedule = '23:30:00';
        	$function->save();
 
        	$function = new Funcion();
-        $function->movie->id = '9';
-        $function->room->id = '3';
+        $function->movie_id = '9';
+        $function->room_id = '3';
        	$function->schedule = '15:00:00';
        	$function->save();
 

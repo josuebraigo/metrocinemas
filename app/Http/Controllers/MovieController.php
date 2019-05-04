@@ -18,11 +18,10 @@ class MovieController extends Controller
     }
 
     public function show($slug) {
-
         $movie = Movie::where('slug', '=', $slug)->firstOrFail();
-
-        return view('pelicula', compact('movie', json_encode($movie->trailer, true)));
-
+				$genres = $movie->genres->all();
+				$actors = $movie->actors->all();
+        return view('pelicula', compact('movie', json_encode($movie->trailer, true), 'genres', 'actors'));
     }
 
     public function search() {

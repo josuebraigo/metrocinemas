@@ -26,10 +26,19 @@
       <div class="info">
         <h1>{{$movie->name}}</h1>
         <p><b>Director: </b>{{$movie->director->name}}</p>
-        <p> <b>Duración: </b>{{$movie->duration}} min</p>
+        <p><b>Duración: </b>{{$movie->duration}} min</p>
         <p><b>Año: </b>{{$movie->year}}</p>
-        <p><b>Género: </b>{{$movie->genre->name}}</p>
-        <p><b>País: </b>{{$movie->country}}</p>
+        <p><b>Géneros: </b>
+          @foreach ($genres as $genre)
+            {{ $genre->name }},
+          @endforeach
+        </p>
+        <p><b>Actores: </b>
+          @foreach ($actors as $actor)
+            {{ $actor->name }},
+          @endforeach
+        </p>
+        <p><b>País: </b>{{$movie->country->name}}</p>
         <h2>Sinopsis</h2>
         <p>{{$movie->synopsis}}</p>
         <h2>Trailer</h2>
