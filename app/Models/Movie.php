@@ -20,8 +20,8 @@ class Movie extends Model
     protected $table = 'movies';
     // protected $primaryKey = 'id';
     // public $timestamps = false;
-    protected $guarded = ['id'];
-    // protected $fillable = [];
+    //protected $guarded = ['id'];
+    protected $fillable = ['countrie_id'];
     // protected $hidden = [];
     // protected $dates = [];
 

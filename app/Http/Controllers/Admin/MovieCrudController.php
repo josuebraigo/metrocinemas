@@ -167,7 +167,7 @@ class MovieCrudController extends CrudController
 
     public function store(StoreRequest $request)
     {
-        dd($request->request);
+        //dd($request->request);
         $name = $request->request->get('name');
         $slug = Str::slug($name, '-');
         $request->request->set('slug', $slug);
