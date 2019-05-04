@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Backpack\CRUD\CrudTrait;
 
-class Actor extends Model
+class Countrie extends Model
 {
     use CrudTrait;
 
@@ -15,11 +15,11 @@ class Actor extends Model
     |--------------------------------------------------------------------------
     */
 
-    protected $table = 'actors';
+    protected $table = 'countries';
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
-    // protected $fillable = [];
+    //protected $fillable = [];
     // protected $hidden = [];
     // protected $dates = [];
 
@@ -34,9 +34,8 @@ class Actor extends Model
     | RELATIONS
     |--------------------------------------------------------------------------
     */
-
-    public function movies() {
-        return $this->belongsToMany('App\Models\Movie')->withTimestamps();
+    public function movies(){
+      return $this->hasMany('App\Models\Movie');
     }
 
     /*

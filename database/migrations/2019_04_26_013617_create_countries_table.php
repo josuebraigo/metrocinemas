@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddSlugToMoviesTable extends Migration
+class CreateCountriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,12 @@ class AddSlugToMoviesTable extends Migration
      */
     public function up()
     {
-        Schema::table('movies', function (Blueprint $table) {
-            //
-            $table->string('slug');
+        Schema::create('countries', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('code');
+            $table->string('name');
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -26,9 +29,6 @@ class AddSlugToMoviesTable extends Migration
      */
     public function down()
     {
-        Schema::table('movies', function (Blueprint $table) {
-            //
-            $table->dropColumn('slug');
-        });
+        Schema::dropIfExists('countries');
     }
 }

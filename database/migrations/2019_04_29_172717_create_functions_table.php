@@ -15,14 +15,14 @@ class CreateFunctionsTable extends Migration
     {
         Schema::create('functions', function (Blueprint $table) {
             $table->bigIncrements('id');
-            
-            $table->unsignedBigInteger('movie_id');
+
+            $table->unsignedBigInteger('movie_id')->nullable();
             $table->foreign('movie_id')->references('id')->on('movies');
 
-            $table->unsignedBigInteger('room_id');
+            $table->unsignedBigInteger('room_id')->nullable();
             $table->foreign('room_id')->references('id')->on('rooms');
 
-            $table->dateTime('schedule');
+            $table->time('schedule');
 
             $table->timestamps();
             $table->softDeletes();

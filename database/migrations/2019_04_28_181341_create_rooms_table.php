@@ -17,7 +17,7 @@ class CreateRoomsTable extends Migration
             $table->bigIncrements('id');
 
             $table->string('name');
-            $table->text('seats');
+            $table->longText('seats');
 
             $table->timestamps();
             $table->softDeletes();

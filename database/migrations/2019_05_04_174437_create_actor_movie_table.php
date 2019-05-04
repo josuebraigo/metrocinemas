@@ -15,14 +15,14 @@ class CreateActorMovieTable extends Migration
     {
         Schema::create('actor_movie', function (Blueprint $table) {
             $table->bigIncrements('id');
+
+            $table->unsignedBigInteger('actor_id')->nullable();
+            $table->foreign('actor_id')->references('id')->on('actors')->onDelete('restrict');
+
+            $table->unsignedBigInteger('movie_id')->nullable();
+            $table->foreign('movie_id')->references('id')->on('movies')->onDelete('restrict');
+
             $table->timestamps();
-
-            $table->unsignedBigInteger('actor_id');
-            $table->foreign('actor_id')->references('id')->on('actors');
-
-            $table->unsignedBigInteger('movie_id');
-            $table->foreign('movie_id')->references('id')->on('movies');
-
             $table->softDeletes();
         });
     }

@@ -48,27 +48,24 @@ class Movie extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function actors () {
-
-        return $this->belongsToMany('App\Models\Actor');
-
+    public function actors() {
+        return $this->belongsToMany('App\Models\Actor')->withTimestamps();
     }
 
-
-    public function director () {
-
+    public function director() {
         return $this->belongsTo('App\Models\Director');
-
     }
 
     public function funcion() {
-
         return $this->hasMany('App\Models\Funcion');
-
     }
 
-    public function genre() {
-        return $this->belongsTo('App\Models\Genre');
+    public function genres() {
+        return $this->belongsToMany('App\Models\Genre')->withTimestamps();
+    }
+
+    public function countrie(){
+      return $this->belongsTo('App\Models\Countrie');
     }
 
     /*
