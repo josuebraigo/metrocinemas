@@ -49,6 +49,8 @@ class GenreCrudController extends CrudController
             'name' => 'name',
         ]);
 
+        $this->crud->enableExportButtons();
+
         // add asterisk for fields that are required in GenreRequest
         $this->crud->setRequiredFields(StoreRequest::class, 'create');
         $this->crud->setRequiredFields(UpdateRequest::class, 'edit');

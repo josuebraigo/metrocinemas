@@ -8,7 +8,6 @@
     <ul>
       <li><a href="/">Inicio</a></li>
       <li><a href="cartelera">Cartelera</a></li>
-      <li><a href="funciones">Funciones</a></li>
     </ul>
   </nav>
 </header>

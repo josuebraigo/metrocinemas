@@ -75,6 +75,8 @@ class FunctionCrudController extends CrudController
             'name' => 'schedule',
        ]);
 
+       $this->crud->enableExportButtons();
+
         // add asterisk for fields that are required in FunctionRequest
         $this->crud->setRequiredFields(StoreRequest::class, 'create');
         $this->crud->setRequiredFields(UpdateRequest::class, 'edit');

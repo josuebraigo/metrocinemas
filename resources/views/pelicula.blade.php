@@ -18,12 +18,11 @@
         <ul>
           <li><a href="/">Inicio</a></li>
           <li><a href="cartelera">Cartelera</a></li>
-          <li><a href="funciones">Funciones</a></li>
         </ul>
       </nav>
     </header>
     <div class="container">
-      <div class="poster"><img src="{{$movie->poster}}" alt="{{$movie->name}}"><a class="boton" href="funciones/{{$movie-&gt;slug}}">¡Comprar boletos!</a></div>
+      <div class="poster"><img src="{{$movie->poster}}" alt="{{$movie->name}}"><a class="boton" href="funciones/{{$movie->slug}}">¡Comprar boletos!</a></div>
       <div class="info">
         <h1>{{$movie->name}}</h1>
         <p><b>Director: </b>{{$movie->director->name}}</p>

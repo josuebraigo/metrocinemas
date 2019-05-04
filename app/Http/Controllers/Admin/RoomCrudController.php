@@ -47,6 +47,8 @@ class RoomCrudController extends CrudController
             'name' => 'name',
         ]);
 
+        $this->crud->enableExportButtons();
+
         // add asterisk for fields that are required in RoomRequest
         $this->crud->setRequiredFields(StoreRequest::class, 'create');
         $this->crud->setRequiredFields(UpdateRequest::class, 'edit');

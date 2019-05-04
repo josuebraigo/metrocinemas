@@ -7,7 +7,7 @@ html
 		.container
 			.poster
 				img(src!="{{$movie->poster}}" alt!="{{$movie->name}}")
-				a.boton(href="funciones/{{$movie->slug}}") ¡Comprar boletos!
+				a.boton(href!="funciones/{{$movie->slug}}") ¡Comprar boletos!
 			.info
 				h1 {{$movie->name}}
 				p

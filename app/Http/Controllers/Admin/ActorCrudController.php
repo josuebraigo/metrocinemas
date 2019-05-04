@@ -27,6 +27,9 @@ class ActorCrudController extends CrudController
         $this->crud->setRoute(config('backpack.base.route_prefix') . '/actor');
         $this->crud->setEntityNameStrings('actor', 'actors');
 
+        $this->crud->enableExportButtons();
+        $this->crud->enableDetailsRow();
+
         /*
         |--------------------------------------------------------------------------
         | CrudPanel Configuration

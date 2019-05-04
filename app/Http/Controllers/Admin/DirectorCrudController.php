@@ -27,6 +27,8 @@ class DirectorCrudController extends CrudController
         $this->crud->setRoute(config('backpack.base.route_prefix') . '/director');
         $this->crud->setEntityNameStrings('director', 'directors');
 
+        $this->crud->enableExportButtons();
+
         /*
         |--------------------------------------------------------------------------
         | CrudPanel Configuration

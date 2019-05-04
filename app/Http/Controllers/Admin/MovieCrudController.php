@@ -119,6 +119,9 @@ class MovieCrudController extends CrudController
             'suffix' => ' min'
         ]);
 
+        $this->crud->allowAccess('show');
+        $this->crud->enableExportButtons();
+
 
         // add asterisk for fields that are required in MovieRequest
         $this->crud->setRequiredFields(StoreRequest::class, 'create');
