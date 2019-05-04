@@ -35,10 +35,8 @@ class Genre extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function movies () {
-
-        return $this->hasMany('App\Models\Movie');
-
+    public function movies() {
+        return $this->belongsToMany('App\Models\Movie')->withTimestamps();
     }
 
     /*

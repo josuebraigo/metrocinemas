@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTicketsTable extends Migration
+class CreateGenreMovieTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,14 @@ class CreateTicketsTable extends Migration
      */
     public function up()
     {
-        Schema::create('tickets', function (Blueprint $table) {
+        Schema::create('genre_movie', function (Blueprint $table) {
             $table->bigIncrements('id');
 
-            $table->unsignedBigInteger('function_id')->nullable();
-            $table->foreign('function_id')->references('id')->on('functions');
+            $table->unsignedBigInteger('genre_id')->nullable();
+            $table->foreign('genre_id')->references('id')->on('genres')->onDelete('restrict');
 
-            $table->string('access');
+            $table->unsignedBigInteger('movie_id')->nullable();
+            $table->foreign('movie_id')->references('id')->on('movies')->onDelete('restrict');
 
             $table->timestamps();
             $table->softDeletes();
@@ -33,6 +34,6 @@ class CreateTicketsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tickets');
+        Schema::dropIfExists('genre_movie');
     }
 }

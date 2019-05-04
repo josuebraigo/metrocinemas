@@ -41,6 +41,9 @@ class MovieCrudController extends CrudController
             'label' => "Nombre",
             'type' => 'text',
             'name' => 'name',
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-6'
+            ],
         ]);
 
         $this->crud->addField([
@@ -48,6 +51,9 @@ class MovieCrudController extends CrudController
             'name' => 'duration',
             'type' => 'number',
             'suffix' => ' min',
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-6'
+            ],
         ]);
 
         $this->crud->addField([
@@ -56,16 +62,25 @@ class MovieCrudController extends CrudController
             'type' => 'textarea',
         ]);
 
-        $this->crud->addField([
-            'label' => "País",
-            'name' => 'country',
-            'type' => 'text',
+        $this->crud->addField([  // Select2
+           'label' => "País",
+           'type' => 'select2',
+           'name' => 'countrie_id', // the db column for the foreign key
+           'entity' => 'countrie', // the method that defines the relationship in your Model
+           'attribute' => 'name', // foreign key attribute that is shown to user
+           'model' => "App\Models\Countrie", // foreign key model
+           'wrapperAttributes' => [
+               'class' => 'form-group col-md-6'
+           ],
         ]);
 
         $this->crud->addField([
             'label' => "Trailer",
             'name' => 'trailer',
             'type' => 'video',
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-6'
+            ],
         ]);
 
         $this->crud->addField([
@@ -75,13 +90,15 @@ class MovieCrudController extends CrudController
             'upload' => true,
             'crop' => true,
             'aspect_ratio' => 0,
-
         ]);
 
         $this->crud->addField([
             'label' => "Año",
             'name' => 'year',
             'type' => 'number',
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-6'
+            ],
         ]);
 
         $this->crud->addField([
@@ -91,15 +108,35 @@ class MovieCrudController extends CrudController
             'entity' => 'director',
             'attribute' => 'name',
             'model' => 'App\Models\Director',
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-6'
+            ],
         ]);
 
-        $this->crud->addField([
-            'label' => "Género",
-            'name' => 'genre_id',
-            'type' => 'select2',
-            'entity' => 'genre',
-            'attribute' => 'name',
-            'model' => 'App\Models\Genre',
+        $this->crud->addField([       // SelectMultiple = n-n relationship (with pivot table)
+            'label' => "Actores",
+            'type' => 'select2_multiple',
+            'name' => 'actors', // the method that defines the relationship in your Model
+            'entity' => 'actors', // the method that defines the relationship in your Model
+            'attribute' => 'name', // foreign key attribute that is shown to user
+            'model' => "App\Models\Actor", // foreign key model
+            'pivot' => true, // on create&update, do you need to add/delete pivot table entries?
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-6'
+            ],
+        ]);
+
+        $this->crud->addField([       // SelectMultiple = n-n relationship (with pivot table)
+            'label' => "Géneros",
+            'type' => 'select2_multiple',
+            'name' => 'genres', // the method that defines the relationship in your Model
+            'entity' => 'genres', // the method that defines the relationship in your Model
+            'attribute' => 'name', // foreign key attribute that is shown to user
+            'model' => "App\Models\Genre", // foreign key model
+            'pivot' => true, // on create&update, do you need to add/delete pivot table entries?
+            'wrapperAttributes' => [
+                'class' => 'form-group col-md-6'
+            ],
         ]);
 
         $this->crud->addColumn([
@@ -130,6 +167,7 @@ class MovieCrudController extends CrudController
 
     public function store(StoreRequest $request)
     {
+        dd($request->request);
         $name = $request->request->get('name');
         $slug = Str::slug($name, '-');
         $request->request->set('slug', $slug);
