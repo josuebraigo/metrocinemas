@@ -168,7 +168,7 @@ class MovieCrudController extends CrudController
     public function store(StoreRequest $request)
     {
         //dd($request->request);
-        $request->request->set('slug', 'slug');
+        // $request->request->set('slug', 'slug');
         // your additional operations before save here
         $redirect_location = parent::storeCrud($request);
         // your additional operations after save here
