@@ -20,16 +20,28 @@ html
 					b Año: 
 					| {{$movie->year}}
 				p
-					b Género: 
-					| {{$movie->genre->name}}
+					b Género:
+					| 
+					@foreach($genres as $genre)
+					{{$genre->name}} 
+					@endforeach
+				p
+					b Reparto: 
+					|
+					@foreach($actors as $actor)
+					{{$actor->name}} 
+					@endforeach
 				p
 					b País: 
-					| {{$movie->country}}
+					| {{$movie->country->name}}
 				h2 Sinopsis
 				p {{$movie->synopsis}}
 				h2 Trailer
-				p 
+				@if(json_decode($movie->trailer)->provider == 'youtube')
 				iframe(width="560" height="315" src!="https://www.youtube.com/embed/{{json_decode($movie->trailer)->id}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen)
+				@elseif(json_decode($movie->trailer)->provider == 'vimeo')
+				iframe(src!="https://player.vimeo.com/video/{{json_decode($movie->trailer)->id}}" width="640" height="266" frameborder="0" allow="autoplay; fullscreen" allowfullscreen)
+				@endif
 
 
 		include include/footer

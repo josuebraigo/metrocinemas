@@ -22,28 +22,31 @@
       </nav>
     </header>
     <div class="container">
-      <div class="poster"><img src="{{$movie->poster}}" alt="{{$movie->name}}"><a class="boton" href="funciones/{{$movie->slug}}">¡Comprar boletos!</a></div>
+      <div class="poster"><img src="{{$movie->poster}}" alt="{{$movie->name}}"><a class="boton" href="/funciones/{{$movie->slug}}">¡Comprar boletos!</a></div>
       <div class="info">
         <h1>{{$movie->name}}</h1>
         <p><b>Director: </b>{{$movie->director->name}}</p>
-        <p><b>Duración: </b>{{$movie->duration}} min</p>
+        <p> <b>Duración: </b>{{$movie->duration}} min</p>
         <p><b>Año: </b>{{$movie->year}}</p>
-        <p><b>Géneros: </b>
-          @foreach ($genres as $genre)
-            {{ $genre->name }},
+        <p><b>Género:</b> 
+          @foreach($genres as $genre)
+          {{$genre->name}} 
           @endforeach
         </p>
-        <p><b>Actores: </b>
-          @foreach ($actors as $actor)
-            {{ $actor->name }},
+        <p><b>Reparto: </b>
+          @foreach($actors as $actor)
+          {{$actor->name}} 
           @endforeach
         </p>
         <p><b>País: </b>{{$movie->country->name}}</p>
         <h2>Sinopsis</h2>
         <p>{{$movie->synopsis}}</p>
         <h2>Trailer</h2>
-        <p> </p>
+        @if(json_decode($movie->trailer)->provider == 'youtube')
         <iframe width="560" height="315" src="https://www.youtube.com/embed/{{json_decode($movie->trailer)->id}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        @elseif(json_decode($movie->trailer)->provider == 'vimeo')
+        <iframe src="https://player.vimeo.com/video/{{json_decode($movie->trailer)->id}}" width="640" height="266" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+        @endif
       </div>
     </div>
     <footer><a href="#">Metrocinemas</a><a href="#">Aviso de privacidad</a>
