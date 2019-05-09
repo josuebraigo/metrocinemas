@@ -84,7 +84,7 @@ class MovieCrudController extends CrudController
         ]);
 
         $this->crud->addField([
-            'label' => "Poster (<a href='https://www.filmaffinity.com/mx/main.html'>Descargar de aquí</a>)",
+            'label' => "Poster (<a href='https://www.filmaffinity.com/mx/main.html' target='_blank'>Descargar de aquí</a>)",
             'name' => 'poster',
             'type' => 'image',
             'upload' => true,

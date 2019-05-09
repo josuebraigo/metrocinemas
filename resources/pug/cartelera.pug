@@ -20,6 +20,8 @@ html
 					h2 {{$movie->name}}
 					a.boton(href!="funciones/{{$movie->slug}}") ¡Compra tus boletos!
 				@endforeach
+			.navegar-paginas
+				{{$movies->links()}}
 
 				
 		include include/footer

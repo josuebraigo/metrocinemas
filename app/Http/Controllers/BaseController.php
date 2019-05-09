@@ -11,6 +11,7 @@ class BaseController extends Controller
     public function index() {
 
     	$movies = Movie::inRandomOrder()->take(5)->get();
+    	
     	return view('index', compact('movies'));
 
     }

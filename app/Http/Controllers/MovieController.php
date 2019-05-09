@@ -12,7 +12,7 @@ class MovieController extends Controller
 {
 
 	public function cartelera() {
-    	$movies = Movie::all();
+    	$movies = Movie::paginate(9);
     	$genres = Genre::all();
     	return view('cartelera', compact('movies', 'genres'));
     }
