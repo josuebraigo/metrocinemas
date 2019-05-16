@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Backpack\CRUD\CrudTrait;
 use Laravel\Scout\Searchable;
 use Cviebrock\EloquentSluggable\Sluggable;
+use Illuminate\Support\Str;
 
 class Movie extends Model
 {
@@ -32,6 +33,37 @@ class Movie extends Model
     | FUNCTIONS
     |--------------------------------------------------------------------------
     */
+
+    public function setImageAttribute($value) {
+        $attribute_name = "image";
+        $disk = "public_folder";
+        $destination_path = "posters";
+
+        if($value == null) {
+            \Storage::disk($disk)->delete($this->{attribute_name});
+
+            $this->attributes[attribute_name] = null;
+        }
+
+        if(starts_with($value, 'data:image')) {
+            $image = \Image::make($value)->encode('jpg', 90);
+
+            $filename = md5($value.time()).'.jpg';
+
+            \Storage::disk($disk)->put($destination_path.'/'.$filename, $image->stream());
+
+            $this->attributes[$attribute_name] = $destination_path.'/'.$filename;
+        }
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+        static::deleting(function($obj) {
+            \Storage::disk('public_folder')->delete($obj->image);
+        });
+    }
+
     public function sluggable()
     {
         return [

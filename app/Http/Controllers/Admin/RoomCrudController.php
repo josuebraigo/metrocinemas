@@ -56,6 +56,7 @@ class RoomCrudController extends CrudController
 
     public function store(StoreRequest $request)
     {
+        dd($seats);
         $request->request->set('seats', 'null');
         // your additional operations before save here
         $redirect_location = parent::storeCrud($request);
