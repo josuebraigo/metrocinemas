@@ -51,7 +51,7 @@ $(document).ready(function() {
    		if(!$(this).hasClass('active')) {
    			$(this).addClass('active');
     		index = $('span').index(this);
-    		alert(index);
+    		alert({{ $seats }});
    		}
    		else {
    			$(this).removeClass('active');

@@ -35,11 +35,11 @@
           <p>{{$asientos[$x]}}</p><span class="seat"><i class="fa fa-star"></i>
             <p>{{$y}}</p></span>
           @else<span class="seat ocupado"><i class="fa fa-star"></i>
-            <p>{{$y++}}</p></span>
-          @endif
-          @php
-            {{$y == 10? $y = 0}}
-          @endphp
+            <p>{{$y}}</p></span>
+          @endif<? if($y == 10) ?>
+<? $y = 0; ?>
+<? esle ?>
+<? $y++; ?>
         @endfor
       </div>
       <button type="submit">Continuar</button>

@@ -23,10 +23,12 @@ html
 					@else
 					span.seat.ocupado
 						i.fa.fa-star
-						p {{$y++}}
+						p {{$y}}
 					@endif
-					@php
-						{{$y == 10? $y = 0}}
+					<? if($y == 10) ?>
+					<? $y = 0; ?>
+					<? esle ?>
+					<? $y++; ?>
 					@endphp
 				@endfor
 

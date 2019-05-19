@@ -10,64 +10,9 @@ module.exports = __webpack_require__(9);
 /***/ }),
 
 /***/ 8:
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-/* WEBPACK VAR INJECTION */(function($) {$(document).ready(function () {
-	$('.peliculas').slick({
-		infinite: true,
-		slidesToShow: 4,
-		slidesToScroll: 1,
-		autoplay: true,
-		autoplaySpeed: 3000,
-		responsive: [{
-			breakpoint: 1024,
-			settings: {
-				slidesToShow: 3,
-				slidesToScroll: 3,
-				infinite: true,
-				dots: true
-			}
-		}, {
-			breakpoint: 600,
-			settings: {
-				slidesToShow: 2,
-				slidesToScroll: 2
-			}
-		}, {
-			breakpoint: 480,
-			settings: {
-				slidesToShow: 1,
-				slidesToScroll: 1
-			}
-		}]
-	});
-
-	$('.container .submenu h4').click(function () {
-		$(this).siblings('ul').slideToggle();
-		if ($(this).hasClass('active')) {
-			$(this).removeClass('active');
-		} else {
-			$(this).addClass('active');
-		}
-	});
-
-	var index;
-	// var seats = {!! json_decode($seats->seats) !!};
-	// var funcion = {{ App\Models\Funcion::find($seats->function_id) }};
-	// console.log(seats);
-	// console.log(funcion);
-
-	$('.asientos .seat').click(function () {
-		if (!$(this).hasClass('active')) {
-			$(this).addClass('active');
-			index = $('span').index(this);
-			alert(index);
-		} else {
-			$(this).removeClass('active');
-		}
-	});
-});
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
+throw new Error("Module build failed: SyntaxError: C:/xampp/htdocs/metrocinemas/resources/js/general.js: Unexpected token (54:13)\n\n\u001b[0m \u001b[90m 52 | \u001b[39m   \t\t\t$(\u001b[36mthis\u001b[39m)\u001b[33m.\u001b[39maddClass(\u001b[32m'active'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 53 | \u001b[39m    \t\tindex \u001b[33m=\u001b[39m $(\u001b[32m'span'\u001b[39m)\u001b[33m.\u001b[39mindex(\u001b[36mthis\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 54 | \u001b[39m    \t\talert({{ $seats }})\u001b[33m;\u001b[39m\n \u001b[90m    | \u001b[39m    \t\t       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 55 | \u001b[39m   \t\t}\n \u001b[90m 56 | \u001b[39m   \t\t\u001b[36melse\u001b[39m {\n \u001b[90m 57 | \u001b[39m   \t\t\t$(\u001b[36mthis\u001b[39m)\u001b[33m.\u001b[39mremoveClass(\u001b[32m'active'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n");
 
 /***/ }),
 
