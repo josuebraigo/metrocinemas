@@ -8,6 +8,7 @@ use Backpack\CRUD\app\Http\Controllers\CrudController;
 use App\Http\Requests\FunctionRequest as StoreRequest;
 use App\Http\Requests\FunctionRequest as UpdateRequest;
 use Backpack\CRUD\CrudPanel;
+use App\Models\FunctionSeat;
 
 /**
  * Class FunctionCrudController
@@ -42,7 +43,7 @@ class FunctionCrudController extends CrudController
             'type' => 'select2',
             'entity' => 'movie',
             'attribute' => 'name',
-            'model' => 'App\Models\Movie', 
+            'model' => 'App\Models\Movie',
         ]);
 
         $this->crud->addField([
@@ -51,7 +52,7 @@ class FunctionCrudController extends CrudController
             'type' => 'select2',
             'entity' => 'room',
             'attribute' => 'name',
-            'model' => 'App\Models\Room', 
+            'model' => 'App\Models\Room',
         ]);
 
         $this->crud->addField([
@@ -83,12 +84,30 @@ class FunctionCrudController extends CrudController
     }
 
     public function store(StoreRequest $request)
-    {   
+    {
+        $seats = array();
+
+        for ($i=0; $i < 100; $i++) {
+          $seats[] = false;
+        }
+
         // dd($request->request);
         // your additional operations before save here
         $redirect_location = parent::storeCrud($request);
         // your additional operations after save here
         // use $this->data['entry'] or $this->crud->entry
+
+        $seats = array();
+
+        for ($i=0; $i < 100; $i++) {
+          $seats[] = false;
+        }
+
+        $functionSeat = new FunctionSeat();
+        $functionSeat->function_id = $this->crud->entry->id;
+        $functionSeat->seats = json_encode($seats);
+        $functionSeat->save();
+
         return $redirect_location;
     }
 

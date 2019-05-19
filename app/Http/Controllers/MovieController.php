@@ -60,7 +60,6 @@ class MovieController extends Controller
             $query->where('genre_id', '=', $id_genre);
         })->paginate(9);
 
-
         return view('cartelera', compact('movies', 'genres'));
     }
 
@@ -69,6 +68,6 @@ class MovieController extends Controller
 			/*foreach ($seats as $key => $seat) {
 				dump(json_decode($seat->seats));
 			}*/
-			return view('seat', compact('seats'));
+			return view('seats', compact('seats'));
 		}
 }
