@@ -85,6 +85,12 @@ class FunctionCrudController extends CrudController
 
     public function store(StoreRequest $request)
     {
+        $seats = array();
+
+        for ($i=0; $i < 100; $i++) {
+          $seats[] = false;
+        }
+
         // dd($request->request);
         // your additional operations before save here
         $redirect_location = parent::storeCrud($request);
@@ -99,7 +105,7 @@ class FunctionCrudController extends CrudController
 
         $functionSeat = new FunctionSeat();
         $functionSeat->function_id = $this->crud->entry->id;
-        $functionSeat->seats = $seats;
+        $functionSeat->seats = json_encode($seats);
         $functionSeat->save();
 
         return $redirect_location;
