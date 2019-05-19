@@ -28,20 +28,18 @@
         @php
           {{$y = 0;}}
           {{$arr = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J');}}
-          {{$asientos=json_decode($seats[0])->seats;}}
+          {{$asientos=json_decode($seats[0]->seats);}}
         @endphp
         @for($x = 0; $x < 100; $x++)
-          @if($asientos[$x] == 'false')<span class="seat"><i class="fa fa-star"></i>
+          @if($asientos[$x] != 'true')
+          <p>{{$asientos[$x]}}</p><span class="seat"><i class="fa fa-star"></i>
             <p>{{$y}}</p></span>
-          @elseif($asientos[$x] == 'true')<span class="seat ocupado"><i class="fa fa-star"></i>
-            <p>{{$y}}</p></span>
+          @else<span class="seat ocupado"><i class="fa fa-star"></i>
+            <p>{{$y++}}</p></span>
           @endif
           @php
-            {{$y++;}}
+            {{$y == 10? $y = 0}}
           @endphp
-          @if($y == 9)
-            {{ $y = 0 }}
-          @endif
         @endfor
       </div>
       <button type="submit">Continuar</button>
