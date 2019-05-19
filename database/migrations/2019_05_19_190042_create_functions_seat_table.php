@@ -15,7 +15,7 @@ class CreateFunctionsSeatTable extends Migration
     {
         Schema::create('functions_seat', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->longText('seat');
+            $table->longText('seats');
 
             $table->unsignedBigInteger('function_id')->nullable();
             $table->foreign('function_id')->references('id')->on('functions')->onDelte('restrict');

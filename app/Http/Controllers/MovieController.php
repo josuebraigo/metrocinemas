@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Movie;
 use App\Models\Genre;
 use App\Models\Funcion;
+use App\Models\FunctionSeat;
 use Illuminate\Support\Arr;
 
 class MovieController extends Controller
@@ -62,4 +63,12 @@ class MovieController extends Controller
 
         return view('cartelera', compact('movies', 'genres'));
     }
+
+		public function seatsFunction($function){
+			$seats = FunctionSeat::where('function_id', $function)->get();
+			/*foreach ($seats as $key => $seat) {
+				dump(json_decode($seat->seats));
+			}*/
+			return view('seat', compact('seats'));
+		}
 }
