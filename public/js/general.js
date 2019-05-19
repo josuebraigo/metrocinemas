@@ -53,15 +53,16 @@ module.exports = __webpack_require__(9);
 
 				var index;
 
-				$('.asientos .seat').click(function () {
-								if (!$(this).hasClass('active')) {
-												$(this).addClass('active');
-												index = $('span').index(this);
-												alert(index);
-								} else {
-												$(this).removeClass('active');
-								}
-				});
+		   	$('.asientos .seat').click(function() {
+		   		if(!$(this).hasClass('active')) {
+		   			$(this).addClass('active');
+		    		index = $('span').index(this);
+		    		alert('a');
+		   		}
+		   		else {
+		   			$(this).removeClass('active');
+		   		}
+		   	});
 });
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 

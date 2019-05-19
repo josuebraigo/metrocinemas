@@ -42,7 +42,7 @@ $(document).ready(function() {
     });
 
     var index;
-		var seats = {{ json_decode($seats->seats) }};
+		var seats = JSON.parse($seats[0]->seats);
 		var funcion = {{ App\Models\Funcion::find($seats->function_id) }};
 		console.log(seats);
 		console.log(funcion);
@@ -51,7 +51,7 @@ $(document).ready(function() {
    		if(!$(this).hasClass('active')) {
    			$(this).addClass('active');
     		index = $('span').index(this);
-    		alert(index);
+    		alert({{ $seats }});
    		}
    		else {
    			$(this).removeClass('active');
