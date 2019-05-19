@@ -18,7 +18,7 @@
       <nav>
         <ul>
           <li><a href="/">Inicio</a></li>
-          <li><a href="cartelera">Cartelera</a></li>
+          <li><a href="/funciones">Funciones</a></li>
         </ul>
       </nav>
     </header>
@@ -27,16 +27,20 @@
         <h4>Géneros</h4>
         <ul>
           @foreach($genres as $genre)
-          <li><a href="cartelera/{{$genre->slug}}">{{$genre->name}}</a></li>
+          <li><a href="/cartelera/{{$genre->slug}}">{{$genre->name}}</a></li>
           @endforeach
         </ul>
       </div>
       <div class="catalogo">
+        @if($movies->isEmpty())
+        <p>No hay películas que mostrar =(</p>
+        @else
         @foreach($movies as $movie)
-        <div class="col14"><a href="pelicula/{{$movie->slug}}"><img src="{{$movie->poster}}"></a>
-          <h2>{{$movie->name}}</h2><a class="boton" href="funciones/{{$movie->slug}}">¡Compra tus boletos!</a>
+        <div class="col14"><a href="/pelicula/{{$movie->slug}}"><img src="{{$movie->poster}}"></a>
+          <h2>{{$movie->name}}</h2><a class="boton" href="/funciones/{{$movie->slug}}">¡Compra tus boletos!</a>
         </div>
         @endforeach
+        @endif
       </div>
       <div class="navegar-paginas">
         {{$movies->links()}}

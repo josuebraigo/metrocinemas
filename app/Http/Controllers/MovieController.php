@@ -19,18 +19,16 @@ class MovieController extends Controller
 
     public function show($slug) {
         $movie = Movie::where('slug', '=', $slug)->firstOrFail();
-				$genres = $movie->genres->all();
-				$actors = $movie->actors->all();
+		$genres = $movie->genres->all();
+		$actors = $movie->actors->all();
         return view('pelicula', compact('movie', json_encode($movie->trailer, true), 'genres', 'actors'));
     }
 
     public function search() {
     	$query = htmlentities($_GET['q']);
-        $movies = Movie::search($query)->get();
-        // dump($designers);
-        $movies = collect($movies);
-
-        return view('cartelera', compact('query', 'movies'));
+        $movies = Movie::where('name', 'like', '%'.$query.'%')->paginate(9);
+        $genres = Genre::all();
+        return view('cartelera', compact('movies', 'genres'));
     }
 
     public function functions() {
@@ -51,5 +49,17 @@ class MovieController extends Controller
         $functions = Funcion::all();
 
         return view('funciones-pelicula', compact('functions', 'movie'));
+    }
+
+    public function genresMovie($slug) {
+        $genres = Genre::all();
+        $genre = Genre::where('slug', '=', $slug)->firstOrFail();
+        $id_genre = $genre->id;
+        $movies = Movie::whereHas('genres', function ($query) use($id_genre) {
+            $query->where('genre_id', '=', $id_genre);
+        })->paginate(9);
+
+
+        return view('cartelera', compact('movies', 'genres'));
     }
 }
