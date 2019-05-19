@@ -57,6 +57,7 @@ module.exports = __webpack_require__(9);
 								if (!$(this).hasClass('active')) {
 												$(this).addClass('active');
 												index = $('span').index(this);
+												alert(index);
 								} else {
 												$(this).removeClass('active');
 								}

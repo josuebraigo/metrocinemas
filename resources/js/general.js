@@ -46,7 +46,8 @@ $(document).ready(function() {
    	$('.asientos .seat').click(function() {
    		if(!$(this).hasClass('active')) {
    			$(this).addClass('active');
-    		index = $('span').index(this);
+    		index = $('span').index(this);    		
+    		alert(index);
    		}
    		else {
    			$(this).removeClass('active');
