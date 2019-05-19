@@ -11,5 +11,6 @@
     "/resources/views/include/head.blade.php": "/resources/views/include/head.blade.php",
     "/resources/views/include/header.blade.php": "/resources/views/include/header.blade.php",
     "/resources/views/index.blade.php": "/resources/views/index.blade.php",
-    "/resources/views/pelicula.blade.php": "/resources/views/pelicula.blade.php"
+    "/resources/views/pelicula.blade.php": "/resources/views/pelicula.blade.php",
+    "/resources/views/seats.blade.php": "/resources/views/seats.blade.php"
 }

@@ -1,0 +1,62 @@
+#seats {
+	.container {
+		width: 80%;
+		margin: 0 auto;
+		h1 {
+			width: 100%;
+			text-align: center;
+		}
+		.asientos {
+			width: 60%;
+			margin: 0 auto;
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: space-between;
+			align-items: center;
+			.seat {
+				width: 10%;
+				text-align: center;
+				position: relative;
+				display: flex;
+				flex-wrap: wrap;
+				align-items: center;
+				justify-content: center;
+				i {
+					font-size: 3.5em;
+				}
+				p {
+					position: absolute;
+				    color: #fff;
+				    width: 100%;
+				    font-size: .8em;
+				    height: 100%;
+				    margin: 0;
+				    display: flex;
+				    align-items: center;
+				    justify-content: center;
+				}
+				&:hover {
+					color: #0074D9;
+				}
+			}
+		}
+		button {
+			background: transparent;
+		    border: 2px solid #3D4852;
+		    color: #3D4852;
+		    width: 40%;
+		    padding: 5px 0;
+		    display: block;
+		    text-align: center;
+		    font-family: 'Raleway';
+		    font-size: 1em;
+		    margin: 3em auto;
+			transition: ease .5s;
+			cursor: pointer;
+			&:hover {
+				background-color: #3D4852;
+				color: #fff;
+			}
+		}
+	}
+}

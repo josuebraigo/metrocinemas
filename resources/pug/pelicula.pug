@@ -24,7 +24,8 @@ html
 					| 
 					@foreach($genres as $genre)
 						@if($loop->index < count($genres) - 1)
-							{{$genre->name}},
+							{{$genre->name}}
+							| ,
 						@else
 							{{$genre->name}}
 						@endif
@@ -34,7 +35,8 @@ html
 					|
 					@foreach($actors as $actor)
 						@if($loop->index < count($actors) - 1)
-							{{$actor->name}},
+							{{$actor->name}}
+							| ,
 						@else
 							{{$actor->name}}
 						@endif
