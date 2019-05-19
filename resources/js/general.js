@@ -42,10 +42,10 @@ $(document).ready(function() {
     });
 
     var index;
-		var seats = JSON.parse($seats[0]->seats);
-		var funcion = {{ App\Models\Funcion::find($seats->function_id) }};
-		console.log(seats);
-		console.log(funcion);
+		// var seats = {!! json_decode($seats->seats) !!};
+		// var funcion = {{ App\Models\Funcion::find($seats->function_id) }};
+		// console.log(seats);
+		// console.log(funcion);
 
    	$('.asientos .seat').click(function() {
    		if(!$(this).hasClass('active')) {

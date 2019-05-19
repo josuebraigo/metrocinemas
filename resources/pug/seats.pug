@@ -9,11 +9,31 @@ html
 		.container
 			h1 Elige tus asientos
 			.asientos
-				- for(x = 0; x < 10; x++)
-					- for(y = 0; y < 10; y++)
-						span.seat
-							i.fa.fa-star
-							p !{arr[x]} !{y}
+				@php
+					{{$y = 0;}}
+					{{$arr = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J');}}
+					{{$asientos=json_decode($seats[0])->seats;}}
+				@endphp
+				@for($x = 0; $x < 100; $x++)
+					@if($asientos[$x] == 'false')
+					span.seat
+						i.fa.fa-star
+						p {{$y}}
+					@elseif($asientos[$x] == 'true')
+					span.seat.ocupado
+						i.fa.fa-star
+						p {{$y}}
+					@endif
+					@php
+						{{$y++;}}
+					@endphp
+					@if($y == 9)
+						{{ $y = 0 }}
+					@endif
+
+
+				@endfor
 
 			button(type="submit") Continuar
+			p(hidden) {{ json_decode($seats[0])->seats }}
 		include include/footer
