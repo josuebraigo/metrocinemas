@@ -17,3 +17,4 @@ Route::get('/pelicula/{slug}', 'MovieController@show');
 Route::get('/buscar', 'MovieController@search');
 Route::get('/funciones', 'MovieController@functions');
 Route::get('/funciones/{slug}', 'MovieController@functionsMovie');
+Route::get('/cartelera/{slug}', 'MovieController@genresMovie');

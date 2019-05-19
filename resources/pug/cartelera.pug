@@ -10,16 +10,20 @@ html
 				ul
 					@foreach($genres as $genre)
 					li
-						a(href!="cartelera/{{$genre->slug}}") {{$genre->name}}
+						a(href!="/cartelera/{{$genre->slug}}") {{$genre->name}}
 					@endforeach
 			.catalogo
+				@if($movies->isEmpty())
+				p No hay películas que mostrar =(
+				@else
 				@foreach($movies as $movie)
 				.col14
-					a(href!="pelicula/{{$movie->slug}}")
+					a(href!="/pelicula/{{$movie->slug}}")
 						img(src!="{{$movie->poster}}")
 					h2 {{$movie->name}}
-					a.boton(href!="funciones/{{$movie->slug}}") ¡Compra tus boletos!
+					a.boton(href!="/funciones/{{$movie->slug}}") ¡Compra tus boletos!
 				@endforeach
+				@endif
 			.navegar-paginas
 				{{$movies->links()}}
 

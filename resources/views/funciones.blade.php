@@ -18,12 +18,15 @@
       <nav>
         <ul>
           <li><a href="/">Inicio</a></li>
-          <li><a href="cartelera">Cartelera</a></li>
+          <li><a href="/funciones">Funciones</a></li>
         </ul>
       </nav>
     </header>
     <div class="container">
       <h1>Funciones</h1>
+      @if($functions->isEmpty())
+      <p>No hay funciones que mostrar</p>
+      @else
       @foreach($movies as $movie)
       <div class="funciones">
         <h2>{{ $movie->name }}</h2>
@@ -36,6 +39,7 @@
         </div>
       </div>
       @endforeach
+      @endif
     </div>
     <footer><a href="#">Metrocinemas</a><a href="#">Aviso de privacidad</a>
       <script src="{{ mix('/js/manifest.js') }}" type="text/javascript"></script>

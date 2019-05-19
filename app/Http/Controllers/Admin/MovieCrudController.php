@@ -158,6 +158,7 @@ class MovieCrudController extends CrudController
 
         $this->crud->allowAccess('show');
         $this->crud->enableExportButtons();
+        $this->crud->enableDetailsRow();
 
 
         // add asterisk for fields that are required in MovieRequest

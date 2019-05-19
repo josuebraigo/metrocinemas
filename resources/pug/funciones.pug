@@ -6,6 +6,9 @@ html
 		include include/header
 		.container
 			h1 Funciones
+			@if($functions->isEmpty())
+			p No hay funciones que mostrar
+			@else
 			@foreach($movies as $movie)
 			.funciones
 				h2 {{ $movie->name }}
@@ -18,4 +21,5 @@ html
 					@endif
 					@endforeach
 			@endforeach
+			@endif
 		include include/footer
