@@ -41,8 +41,16 @@ $(document).ready(function() {
     	}
     });
 
+    var index;
+
    	$('.asientos .seat').click(function() {
-   		alert("Holi");
+   		if(!$(this).hasClass('active')) {
+   			$(this).addClass('active');
+    		index = $('span').index(this);
+   		}
+   		else {
+   			$(this).removeClass('active');
+   		}
    	}); 
 
 });

@@ -4197,6 +4197,10 @@ footer a {
   color: #0074D9;
 }
 
+#seats .container .asientos .active {
+  color: #2ECC40;
+}
+
 #seats .container button {
   background: transparent;
   border: 2px solid #3D4852;
