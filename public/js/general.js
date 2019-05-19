@@ -57,13 +57,19 @@ module.exports = __webpack_require__(9);
 	// console.log(seats);
 	// console.log(funcion);
 
+	var asientos = JSON.parse($('.arreglo').text());
+
 	$('.asientos .seat').click(function () {
 		if (!$(this).hasClass('active')) {
 			$(this).addClass('active');
 			index = $('span').index(this);
-			alert(index);
+			asientos[index] = true;
+			//console.log(asientos);
 		} else {
 			$(this).removeClass('active');
+			index = $('span').index(this);
+			asientos[index] = false;
+			//console.log(asientos);
 		}
 	});
 });

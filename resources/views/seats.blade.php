@@ -32,9 +32,9 @@
         @endphp
         @for($x = 0; $x < 100; $x++)
           @if($asientos[$x] != 'true')<span class="seat"><i class="fa fa-star"></i>
-            <p>{{$y}}</p></span>
+            <p>{{ $y }}</p></span>
           @else<span class="seat ocupado"><i class="fa fa-star"></i>
-            <p>{{$y}}</p></span>
+            <p>{{ $y }}</p></span>
           @endif
           @php
             if($y == 9){
@@ -46,8 +46,8 @@
           @endphp
         @endfor
       </div>
-      <button type="submit">Continuar</button>
-      <p hidden>{{ json_decode($seats[0])->seats }}</p>
+      <button id="btnContinuar" type="submit">Continuar</button>
+      <p class="arreglo" hidden>{{ $seats[0]->seats }}</p>
     </div>
     <footer><a href="#">Metrocinemas</a><a href="#">Aviso de privacidad</a>
       <script src="{{ mix('/js/manifest.js') }}" type="text/javascript"></script>
