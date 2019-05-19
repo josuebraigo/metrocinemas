@@ -29,7 +29,7 @@
         <p><b>Director: </b>{{$movie->director->name}}</p>
         <p> <b>Duración: </b>{{$movie->duration}} min</p>
         <p><b>Año: </b>{{$movie->year}}</p>
-        <p><b>Género:</b>
+        <p><b>Género:</b> 
           @foreach($genres as $genre)
             @if($loop->index < count($genres) - 1)
               {{$genre->name}},

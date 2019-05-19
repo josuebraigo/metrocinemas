@@ -4128,3 +4128,93 @@ footer a {
   text-decoration: none;
 }
 
+#seats .container {
+  width: 80%;
+  margin: 0 auto;
+}
+
+#seats .container h1 {
+  width: 100%;
+  text-align: center;
+}
+
+#seats .container .asientos {
+  width: 60%;
+  margin: 0 auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+#seats .container .asientos .seat {
+  width: 10%;
+  text-align: center;
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+#seats .container .asientos .seat i {
+  font-size: 3.5em;
+}
+
+#seats .container .asientos .seat i:hover {
+  color: #0074D9;
+}
+
+#seats .container .asientos .seat p {
+  position: absolute;
+  color: #fff;
+  width: 100%;
+  font-size: .8em;
+  height: 100%;
+  margin: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+#seats .container button {
+  background: transparent;
+  border: 2px solid #3D4852;
+  color: #3D4852;
+  width: 40%;
+  padding: 5px 0;
+  display: block;
+  text-align: center;
+  font-family: 'Raleway';
+  font-size: 1em;
+  margin: 3em auto;
+  -webkit-transition: ease .5s;
+  transition: ease .5s;
+  cursor: pointer;
+}
+
+#seats .container button:hover {
+  background-color: #3D4852;
+  color: #fff;
+}
+
