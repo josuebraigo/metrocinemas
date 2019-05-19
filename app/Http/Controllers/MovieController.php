@@ -68,6 +68,6 @@ class MovieController extends Controller
 			/*foreach ($seats as $key => $seat) {
 				dump(json_decode($seat->seats));
 			}*/
-			return view('seat', compact('seats'));
+			return view('seats', compact('seats'));
 		}
 }
