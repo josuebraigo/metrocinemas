@@ -60,7 +60,6 @@ class MovieController extends Controller
             $query->where('genre_id', '=', $id_genre);
         })->paginate(9);
 
-
         return view('cartelera', compact('movies', 'genres'));
     }
 
