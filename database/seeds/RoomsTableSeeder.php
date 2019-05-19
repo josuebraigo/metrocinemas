@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Models\Rooms;
+use App\Models\Room;
 
 class RoomsTableSeeder extends Seeder
 {
@@ -14,22 +14,18 @@ class RoomsTableSeeder extends Seeder
     {
         $rooms = new Room();
         $rooms->name = "DeLorean";
-        $rooms->seats = "null";
         $rooms->save();
 
         $rooms = new Room();
         $rooms->name = "Asgard";
-        $rooms->seats = "null";
         $rooms->save();
 
         $rooms = new Room();
         $rooms->name = "Wakanda";
-        $rooms->seats = "null";
         $rooms->save();
 
         $rooms = new Room();
         $rooms->name = "Halcón Milenario";
-        $rooms->seats = "null";
         $rooms->save();
     }
 }

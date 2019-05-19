@@ -31,7 +31,7 @@ class FunctionsTableSeeder extends Seeder
        	$function->save();
 
        	$function = new Funcion();
-        $function->movie_id = '9';
+        $function->movie_id = '8';
         $function->room_id = '3';
        	$function->schedule = '15:00:00';
        	$function->save();
