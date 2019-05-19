@@ -23,13 +23,21 @@ html
 					b Género:
 					| 
 					@foreach($genres as $genre)
-					{{$genre->name}} 
+						@if($loop->index < count($genres) - 1)
+							{{$genre->name}},
+						@else
+							{{$genre->name}}
+						@endif
 					@endforeach
 				p
 					b Reparto: 
 					|
 					@foreach($actors as $actor)
-					{{$actor->name}} 
+						@if($loop->index < count($actors) - 1)
+							{{$actor->name}},
+						@else
+							{{$actor->name}}
+						@endif
 					@endforeach
 				p
 					b País: 
