@@ -23,9 +23,6 @@
 				justify-content: center;
 				i {
 					font-size: 3.5em;
-					&:hover {
-						color: #0074D9;
-					}
 				}
 				p {
 					position: absolute;
@@ -37,6 +34,9 @@
 				    display: flex;
 				    align-items: center;
 				    justify-content: center;
+				}
+				&:hover {
+					color: #0074D9;
 				}
 			}
 		}

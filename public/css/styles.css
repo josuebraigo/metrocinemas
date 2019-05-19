@@ -4175,10 +4175,6 @@ footer a {
   font-size: 3.5em;
 }
 
-#seats .container .asientos .seat i:hover {
-  color: #0074D9;
-}
-
 #seats .container .asientos .seat p {
   position: absolute;
   color: #fff;
@@ -4195,6 +4191,10 @@ footer a {
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
+}
+
+#seats .container .asientos .seat:hover {
+  color: #0074D9;
 }
 
 #seats .container button {
