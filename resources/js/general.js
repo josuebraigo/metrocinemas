@@ -42,16 +42,20 @@ $(document).ready(function() {
     });
 
     var index;
+		var seats = {{ json_decode($seats->seats) }};
+		var funcion = {{ App\Models\Funcion::find($seats->function_id) }};
+		console.log(seats);
+		console.log(funcion);
 
    	$('.asientos .seat').click(function() {
    		if(!$(this).hasClass('active')) {
    			$(this).addClass('active');
-    		index = $('span').index(this);    		
+    		index = $('span').index(this);
     		alert(index);
    		}
    		else {
    			$(this).removeClass('active');
    		}
-   	}); 
+   	});
 
 });
