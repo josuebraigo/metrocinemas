@@ -51,24 +51,26 @@ $(document).ready(function() {
 	var funcion = $('.funcion').text();
 	var cantidad = 0;
 	var total = 0;
+	var seleccionados = new Array();
 	$('.detalles span').text(cantidad + " x $50");
 	$('.detalles p').text("$" + total);
 
 
+	//Funcionalidad de asientos
 	$('.asientos .seat').click(function () {
 		if(!$(this).hasClass('ocupado')) {
 			if (!$(this).hasClass('active')) {
 				$(this).addClass('active');
 				index = $('span').index(this);
 				asientos[index] = true;
+				seleccionados.push(index);
 				cantidad++;
 				$('.detalles span').text(cantidad + " x $50");
-				//console.log(asientos);
 			} else {
 				$(this).removeClass('active');
 				index = $('span').index(this);
 				asientos[index] = false;
-				//console.log(asientos);
+				seleccionados.splice(seleccionados.indexOf(index),1);
 				cantidad--;
 				$('.detalles span').text(cantidad + " x $50");
 
@@ -88,11 +90,11 @@ $(document).ready(function() {
 		  }
 		});
 		$.ajax({
-				url:'/prueba',
+				url:'/ticket',
 				type: 'POST',
-				data: {seats: asientos, function: funcion},
+				data: {seats: asientos, function: funcion, selected: seleccionados},
 				success: function(result){
-					console.log(result);
+					windows.location.replace = "/ticket"
 				},
 				error: function(result){
 					console.log('error: ' + result);

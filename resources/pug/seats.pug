@@ -10,23 +10,23 @@ html
 			h1 Elige tus asientos
 			.asientos
 				@php
-					{{$y = 0;}}
+					{{$y = 0; $cont = 0;}}
 					{{$arr = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J');}}
 					{{$asientos=json_decode($seats[0]->seats);}}
 				@endphp
 				@for($x = 0; $x < 100; $x++)
 					@if($asientos[$x] != 'true')
-					p {{$asientos[$x]}}
 					span.seat
 						i.fa.fa-star
-						p {{$y}}
+						p {{$arr[$cont]}} {{$y + 1}}
 					@else
 					span.seat.ocupado
 						i.fa.fa-star
-						p {{$y}}
+						p {{$arr[$cont]}} {{$y + 1}}
 					@endif
 					@if($y == 9)
 						p(hidden) {{$y = 0}}
+						p(hidden) {{$cont++}}
 					@else
 						p(hidden) {{$y++}}
 					@endif
@@ -40,8 +40,10 @@ html
 			p(hidden).funcion {{ $seats[0]->function_id }}
 		.detalles
 			h2 Detalles de compra:
+			h4 Película: {{$movie->name}}
+			h4 Función: {{$seats[0]->function->schedule}}
 			span
 			h2 Total de compra
-			p $50
+			p 
 			button#btnContinuar(type="submit") Continuar
 		include include/footer

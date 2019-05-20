@@ -17,7 +17,7 @@ html
 				.horarios
 					@foreach($functions as $function)
 					@if($function->movie->id == $movie->id)
-					a(href="#") {{$function->schedule}}
+					a(href!="{{$function->id}}") {{$function->schedule}}
 					@endif
 					@endforeach
 			@endforeach

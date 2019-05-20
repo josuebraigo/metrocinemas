@@ -16,10 +16,7 @@ Route::get('/cartelera', 'MovieController@cartelera');
 Route::get('/pelicula/{slug}', 'MovieController@show');
 Route::get('/buscar', 'MovieController@search');
 Route::get('/funciones', 'MovieController@functions');
-Route::get('/funciones1/{function}', 'MovieController@seatsFunction');
 Route::get('/funciones/{slug}', 'MovieController@functionsMovie');
+Route::get('/funciones/{slug}/{function}', 'MovieController@seatsFunction');
 Route::get('/cartelera/{slug}', 'MovieController@genresMovie');
-Route::post('/prueba', 'MovieController@asignarAsientos');
-Route::get('/asientos', function() {
-	return view('seats');
-});
+Route::post('/ticket', 'MovieController@asignarAsientos');

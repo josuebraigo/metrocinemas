@@ -63,17 +63,33 @@ class MovieController extends Controller
         return view('cartelera', compact('movies', 'genres'));
     }
 
-		public function seatsFunction($function){
-			$seats = FunctionSeat::where('function_id', $function)->get();
+		public function seatsFunction($function, $id){
+            // dd($id);
+			$seats = FunctionSeat::where('function_id', $id)->get();
 			/*foreach ($seats as $key => $seat) {
 				dump(json_decode($seat->seats));
 			}*/
-			return view('seats', compact('seats'));
+            $movie = Movie::where('slug',$function)->firstOrFail();
+
+			return view('seats', compact('seats', 'movie'));
 		}
 
 		public function asignarAsientos(Request $request){
 			$functionSeat = FunctionSeat::where('function_id', $request->function)->update(['seats' => json_encode($request->seats)]);
+            $function = Funcion::where('id', $request->function)->firstOrFail();
+            $seleccionados = $request->selected;
+            // $letra = $seleccionados[0] % 10;
 
-			return $functionSeat;
+            $arr = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J');
+            $letra = 0;
+            $numero = 0;
+            for($i = 0; $i < sizeof($seleccionados); $i++) {
+                $letra = $arr[$seleccionados[$i] / 10];
+                $numero = ($seleccionados[$i] % 10) + 1;
+                $seleccionados[$i] = $letra.$numero;
+            }
+
+            return $functionSeat;
+			// return view('ticket', compact('function', 'seleccionados'));
 		}
 }

@@ -26,34 +26,34 @@
       <h1>Elige tus asientos</h1>
       <div class="asientos">
         @php
-          {{$y = 0;}}
+          {{$y = 0; $cont = 0;}}
           {{$arr = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J');}}
           {{$asientos=json_decode($seats[0]->seats);}}
         @endphp
         @for($x = 0; $x < 100; $x++)
-          @if($asientos[$x] != 'true')
-          <p>{{$asientos[$x]}}</p><span class="seat"><i class="fa fa-star"></i>
-            <p>{{$y}}</p></span>
+          @if($asientos[$x] != 'true')<span class="seat"><i class="fa fa-star"></i>
+            <p>{{$arr[$cont]}} {{$y + 1}}</p></span>
           @else<span class="seat ocupado"><i class="fa fa-star"></i>
-            <p>{{$y}}</p></span>
+            <p>{{$arr[$cont]}} {{$y + 1}}</p></span>
           @endif
           @if($y == 9)
             <p hidden>{{$y = 0}}</p>
+            <p hidden>{{$cont++}}</p>
           @else
             <p hidden>{{$y++}}</p>
           @endif
         @endfor
       </div>
-      <p class="arreglo" hidden>{{ json_decode($seats[0])->seats }}</p>
+      <p class="arreglo" hidden>{{ $seats[0]->seats }}</p>
       <p class="funcion" hidden>{{ $seats[0]->function_id }}</p>
     </div>
     <div class="detalles">
-      <h2>Detalles de compra:</h2><span></span>
+      <h2>Detalles de compra:</h2>
+      <h4>Película: {{$movie->name}}</h4>
+      <h4>Función: {{$seats[0]->function->schedule}}</h4><span></span>
       <h2>Total de compra</h2>
-      <p>$50</p>
+      <p> </p>
       <button id="btnContinuar" type="submit">Continuar</button>
-      <p class="arreglo" hidden>{{ $seats[0]->seats }}</p>
-      <p class="funcion" hidden>{{ $seats[0]->function_id }}</p>
     </div>
     <footer><a href="#">Metrocinemas</a><a href="#">Aviso de privacidad</a>
       <script src="{{ mix('/js/manifest.js') }}" type="text/javascript"></script>

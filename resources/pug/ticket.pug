@@ -1,0 +1,15 @@
+doctype
+html
+	head
+		include include/head
+	body#ticket
+		include include/header
+		.container
+			h1 {{$function->movie->name}}
+			h2 {{$function->schedule}}
+			h3 Asientos:
+				@for($i = 0; $i < sizeOf($seleccionados); $i++)
+				span {{$seleccionados[$i]}}
+					| ,
+				@endfor
+		include include/footer

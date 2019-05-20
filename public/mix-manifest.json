@@ -4,6 +4,7 @@
     "/css/styles.css": "/css/styles.css",
     "/js/manifest.js": "/js/manifest.js",
     "/resources/views/cartelera.blade.php": "/resources/views/cartelera.blade.php",
+    "/resources/views/errors/404.blade.php": "/resources/views/errors/404.blade.php",
     "/resources/views/funcion.blade.php": "/resources/views/funcion.blade.php",
     "/resources/views/funciones-pelicula.blade.php": "/resources/views/funciones-pelicula.blade.php",
     "/resources/views/funciones.blade.php": "/resources/views/funciones.blade.php",
