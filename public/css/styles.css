@@ -4205,11 +4205,17 @@ footer a {
   color: #FF4136;
 }
 
-#seats .container button {
+#seats .detalles {
+  position: fixed;
+  right: 5vw;
+  top: 20vh;
+}
+
+#seats .detalles button {
   background: transparent;
   border: 2px solid #3D4852;
   color: #3D4852;
-  width: 40%;
+  width: 100%;
   padding: 5px 0;
   display: block;
   text-align: center;
@@ -4221,7 +4227,7 @@ footer a {
   cursor: pointer;
 }
 
-#seats .container button:hover {
+#seats .detalles button:hover {
   background-color: #3D4852;
   color: #fff;
 }

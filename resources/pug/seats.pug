@@ -25,13 +25,23 @@ html
 						i.fa.fa-star
 						p {{$y}}
 					@endif
-					<? if($y == 10) ?>
-					<? $y = 0; ?>
-					<? esle ?>
-					<? $y++; ?>
-					@endphp
+					@if($y == 9)
+						p(hidden) {{$y = 0}}
+					@else
+						p(hidden) {{$y++}}
+					@endif
+					//- <? if($y == 9) ?>
+					//- <? $y = 0; ?>
+					//- <? else ?>
+					//- <? $y++; ?>
 				@endfor
 
+			p(hidden).arreglo {{ json_decode($seats[0])->seats }}
+		.detalles
+			h2 Detalles de compra:
+			span
+			h2 Total de compra
+			p $50
 			button(type="submit") Continuar
-			p(hidden) {{ json_decode($seats[0])->seats }}
+
 		include include/footer
