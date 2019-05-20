@@ -70,4 +70,9 @@ class MovieController extends Controller
 			}*/
 			return view('seats', compact('seats'));
 		}
+
+		public function asignarAsientos(Request $request){
+			
+			return 'asdas';
+		}
 }
