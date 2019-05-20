@@ -48,6 +48,7 @@ $(document).ready(function() {
 		// console.log(funcion);
 
 	var asientos = JSON.parse($('.arreglo').text());
+	var funcion = $('.funcion').text();
 	var cantidad = 0;
 	var total = 0;
 	$('.detalles span').text(cantidad + " x $50");

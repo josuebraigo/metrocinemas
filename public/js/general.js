@@ -58,6 +58,7 @@ module.exports = __webpack_require__(9);
 	// console.log(funcion);
 
 	var asientos = JSON.parse($('.arreglo').text());
+	var funcion = $('.funcion').text();
 	var cantidad = 0;
 	var total = 0;
 	$('.detalles span').text(cantidad + " x $50");
