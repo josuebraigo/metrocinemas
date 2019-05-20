@@ -76,9 +76,9 @@ module.exports = __webpack_require__(9);
 
 	$('#btnContinuar').click(function(){
 		$.ajaxSetup({
-		  headers: {
-		      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-		  }
+		    headers: {
+		        'X-CSRF-TOKEN': $('meta[name="csrf_token"]').attr('content')
+		    }
 		});
 		$.ajax({
 				url:'/prueba',

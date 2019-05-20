@@ -48,6 +48,7 @@
       </div>
       <button id="btnContinuar" type="submit">Continuar</button>
       <p class="arreglo" hidden>{{ $seats[0]->seats }}</p>
+      <p class="funcion" hidden>{{ $seats[0]->function_id }}</p>
     </div>
     <footer><a href="#">Metrocinemas</a><a href="#">Aviso de privacidad</a>
       <script src="{{ mix('/js/manifest.js') }}" type="text/javascript"></script>

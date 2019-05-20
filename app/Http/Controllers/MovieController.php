@@ -72,7 +72,8 @@ class MovieController extends Controller
 		}
 
 		public function asignarAsientos(Request $request){
-			
-			return 'asdas';
+			$functionSeat = FunctionSeat::where('function_id', $request->function)->update(['seats' => json_encode($request->seats)]);
+
+			return $functionSeat;
 		}
 }
