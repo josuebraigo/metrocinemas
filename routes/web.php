@@ -19,6 +19,7 @@ Route::get('/funciones', 'MovieController@functions');
 Route::get('/funciones1/{function}', 'MovieController@seatsFunction');
 Route::get('/funciones/{slug}', 'MovieController@functionsMovie');
 Route::get('/cartelera/{slug}', 'MovieController@genresMovie');
+Route::post('/prueba', 'MovieController@asignarAsientos');
 Route::get('/asientos', function() {
 	return view('seats');
 });

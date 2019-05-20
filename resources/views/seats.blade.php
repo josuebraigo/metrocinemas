@@ -45,6 +45,7 @@
         @endfor
       </div>
       <p class="arreglo" hidden>{{ json_decode($seats[0])->seats }}</p>
+      <p class="funcion" hidden>{{ $seats[0]->function_id }}</p>
     </div>
     <div class="detalles">
       <h2>Detalles de compra:</h2><span></span>

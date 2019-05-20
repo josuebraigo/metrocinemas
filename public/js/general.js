@@ -86,6 +86,25 @@ module.exports = __webpack_require__(9);
 			alert('No puedes seleccionar este aciento, ya está ocupado');
 		}
 	});
+
+	$('#btnContinuar').click(function () {
+		$.ajaxSetup({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			}
+		});
+		$.ajax({
+			url: '/prueba',
+			type: 'POST',
+			data: { seats: asientos, function: funcion },
+			success: function success(result) {
+				console.log(result);
+			},
+			error: function error(result) {
+				console.log('error: ' + result);
+			}
+		});
+	});
 });
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 

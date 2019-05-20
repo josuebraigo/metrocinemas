@@ -37,11 +37,11 @@ html
 				@endfor
 
 			p(hidden).arreglo {{ json_decode($seats[0])->seats }}
+			p(hidden).funcion {{ $seats[0]->function_id }}
 		.detalles
 			h2 Detalles de compra:
 			span
 			h2 Total de compra
 			p $50
 			button(type="submit") Continuar
-
 		include include/footer

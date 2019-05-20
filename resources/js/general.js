@@ -78,7 +78,25 @@ $(document).ready(function() {
 		else {
 			alert('No puedes seleccionar este aciento, ya está ocupado')
 		}
+	});
 
+	$('#btnContinuar').click(function(){
+		$.ajaxSetup({
+		  headers: {
+		      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		  }
+		});
+		$.ajax({
+				url:'/prueba',
+				type: 'POST',
+				data: {seats: asientos, function: funcion},
+				success: function(result){
+					console.log(result);
+				},
+				error: function(result){
+					console.log('error: ' + result);
+				}
+			});
 	});
 
 });
