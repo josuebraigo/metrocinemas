@@ -47,15 +47,57 @@ $(document).ready(function() {
 		// console.log(seats);
 		// console.log(funcion);
 
-   	$('.asientos .seat').click(function() {
-   		if(!$(this).hasClass('active')) {
-   			$(this).addClass('active');
-    		index = $('span').index(this);
-    		alert({{ $seats }});
-   		}
-   		else {
-   			$(this).removeClass('active');
-   		}
-   	});
+	var asientos = JSON.parse($('.arreglo').text());
+	var funcion = $('.funcion').text();
+	var cantidad = 0;
+	var total = 0;
+	$('.detalles span').text(cantidad + " x $50");
+	$('.detalles p').text("$" + total);
+
+
+	$('.asientos .seat').click(function () {
+		if(!$(this).hasClass('ocupado')) {
+			if (!$(this).hasClass('active')) {
+				$(this).addClass('active');
+				index = $('span').index(this);
+				asientos[index] = true;
+				cantidad++;
+				$('.detalles span').text(cantidad + " x $50");
+				//console.log(asientos);
+			} else {
+				$(this).removeClass('active');
+				index = $('span').index(this);
+				asientos[index] = false;
+				//console.log(asientos);
+				cantidad--;
+				$('.detalles span').text(cantidad + " x $50");
+
+			}
+			total = cantidad * 50;
+			$('.detalles p').text("$" + total);
+		}
+		else {
+			alert('No puedes seleccionar este aciento, ya está ocupado')
+		}
+	});
+
+	$('#btnContinuar').click(function(){
+		$.ajaxSetup({
+		  headers: {
+		      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		  }
+		});
+		$.ajax({
+				url:'/prueba',
+				type: 'POST',
+				data: {seats: asientos, function: funcion},
+				success: function(result){
+					console.log(result);
+				},
+				error: function(result){
+					console.log('error: ' + result);
+				}
+			});
+	});
 
 });

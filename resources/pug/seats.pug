@@ -12,29 +12,36 @@ html
 				@php
 					{{$y = 0;}}
 					{{$arr = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J');}}
-					{{$asientos=json_decode($seats[0])->seats;}}
+					{{$asientos=json_decode($seats[0]->seats);}}
 				@endphp
 				@for($x = 0; $x < 100; $x++)
-					@if($asientos[$x] == 'false')
+					@if($asientos[$x] != 'true')
+					p {{$asientos[$x]}}
 					span.seat
 						i.fa.fa-star
 						p {{$y}}
-					@elseif($asientos[$x] == 'true')
+					@else
 					span.seat.ocupado
 						i.fa.fa-star
 						p {{$y}}
 					@endif
-					@php
-						{{$y++;}}
-					@endphp
 					@if($y == 9)
-						{{ $y = 0 }}
+						p(hidden) {{$y = 0}}
+					@else
+						p(hidden) {{$y++}}
 					@endif
-
-
+					//- <? if($y == 9) ?>
+					//- <? $y = 0; ?>
+					//- <? else ?>
+					//- <? $y++; ?>
 				@endfor
 
-			button(type="submit") Continuar
-			p(hidden).arreglo {{ json_decode($seats[0]->seats) }}
+			p(hidden).arreglo {{ $seats[0]->seats }}
 			p(hidden).funcion {{ $seats[0]->function_id }}
+		.detalles
+			h2 Detalles de compra:
+			span
+			h2 Total de compra
+			p $50
+			button#btnContinuar(type="submit") Continuar
 		include include/footer

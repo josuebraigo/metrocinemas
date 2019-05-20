@@ -4,7 +4,7 @@
     <title>Metrocinemas</title>
     <meta charset="utf-8">
     <meta description="Metrocinemas en un cine tapatío donde encontrás películas de diferentes géneros, épocas, etc">
-    <meta name="csrf_token" content="{{ csrf_token() }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/css/styles.css">
@@ -26,26 +26,31 @@
       <h1>Elige tus asientos</h1>
       <div class="asientos">
         @php
-          $y = 0;
-          $arr = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J');
-          $asientos = json_decode($seats[0]->seats);
+          {{$y = 0;}}
+          {{$arr = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J');}}
+          {{$asientos=json_decode($seats[0]->seats);}}
         @endphp
         @for($x = 0; $x < 100; $x++)
-          @if($asientos[$x] != 'true')<span class="seat"><i class="fa fa-star"></i>
-            <p>{{ $y }}</p></span>
+          @if($asientos[$x] != 'true')
+          <p>{{$asientos[$x]}}</p><span class="seat"><i class="fa fa-star"></i>
+            <p>{{$y}}</p></span>
           @else<span class="seat ocupado"><i class="fa fa-star"></i>
-            <p>{{ $y }}</p></span>
+            <p>{{$y}}</p></span>
           @endif
-          @php
-            if($y == 9){
-              $y = 0;
-            }
-            else{
-              $y++;
-            }
-          @endphp
+          @if($y == 9)
+            <p hidden>{{$y = 0}}</p>
+          @else
+            <p hidden>{{$y++}}</p>
+          @endif
         @endfor
       </div>
+      <p class="arreglo" hidden>{{ json_decode($seats[0])->seats }}</p>
+      <p class="funcion" hidden>{{ $seats[0]->function_id }}</p>
+    </div>
+    <div class="detalles">
+      <h2>Detalles de compra:</h2><span></span>
+      <h2>Total de compra</h2>
+      <p>$50</p>
       <button id="btnContinuar" type="submit">Continuar</button>
       <p class="arreglo" hidden>{{ $seats[0]->seats }}</p>
       <p class="funcion" hidden>{{ $seats[0]->function_id }}</p>
