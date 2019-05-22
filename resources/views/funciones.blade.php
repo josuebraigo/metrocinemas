@@ -33,7 +33,7 @@
         <div class="poster"><img src="{{$movie->poster}}"></div>
         <div class="horarios">
           @foreach($functions as $function)
-          @if($function->movie->id == $movie->id)<a href="{{$function->id}}">{{$function->schedule}}</a>
+          @if($function->movie->id == $movie->id)<a href="/funciones/{{$movie->slug}}/{{$function->id}}">{{$function->schedule}}</a>
           @endif
           @endforeach
         </div>

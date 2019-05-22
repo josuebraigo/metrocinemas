@@ -91,22 +91,27 @@ module.exports = __webpack_require__(9);
 	});
 
 	$('#btnContinuar').click(function () {
-		$.ajaxSetup({
-			headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			}
-		});
-		$.ajax({
-			url: '/ticket',
-			type: 'POST',
-			data: { seats: asientos, function: funcion, selected: seleccionados },
-			success: function success(result) {
-				windows.location.replace = "/ticket";
-			},
-			error: function error(result) {
-				console.log('error: ' + result);
-			}
-		});
+		if(cantidad <= 0) {
+			alert("Debes seleccionar al menos 1 asiento");
+		}
+		else {
+			$.ajaxSetup({
+				headers: {
+					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				}
+			});
+			$.ajax({
+				url: '/ticket',
+				type: 'post',
+				data: { seats: asientos, function: funcion, selected: seleccionados },
+				success: function success(result) {
+					window.location.replace('/ticket');
+				},
+				error: function error(result) {
+					console.log('error: ' + result);
+				}
+			});
+		}
 	});
 });
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))

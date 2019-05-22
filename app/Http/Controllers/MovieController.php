@@ -89,7 +89,8 @@ class MovieController extends Controller
                 $seleccionados[$i] = $letra.$numero;
             }
 
-            return $functionSeat;
+            
+            return view('ticket' , compact('seleccionados', 'function'));
 			// return view('ticket', compact('function', 'seleccionados'));
 		}
 }

@@ -91,10 +91,10 @@ $(document).ready(function() {
 		});
 		$.ajax({
 				url:'/ticket',
-				type: 'POST',
+				type: 'PUT',
 				data: {seats: asientos, function: funcion, selected: seleccionados},
 				success: function(result){
-					windows.location.replace = "/ticket"
+					window.location.replace('/ticket');
 				},
 				error: function(result){
 					console.log('error: ' + result);
