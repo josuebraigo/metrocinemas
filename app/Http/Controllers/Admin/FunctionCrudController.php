@@ -106,9 +106,18 @@ class FunctionCrudController extends CrudController
         $redirect_location = parent::storeCrud($request);
         // your additional operations after save here
         // use $this->data['entry'] or $this->crud->entry
+        $room = $request->request->get('room_id');
+        $funciones = \App\Models\Funcion::where('room_id', '=', $room)->get();
+        foreach ($funciones as $key => $funcion) {
+            if($request->request->get('schedule') >= $funcion->schedule && $request->request->get('schedule') <= $funcion->finish) {
+                return redirect('/admin/function/create')->withErrors('El horario interfiere con otra función');
+            }
+        }
+
 
 
         /////////////////////////Asientos Inicializados
+
         $seats = array();
 
         for ($i=0; $i < 100; $i++) {

@@ -72,6 +72,7 @@ $(document).ready(function() {
 				index = $('.asientos span').index(this);
 				asientos[index] = true;
 				seleccionados.push(index);
+				
 				cantidad++;
 				$('.detalles span').text(cantidad + " x $50");
 			} else {
