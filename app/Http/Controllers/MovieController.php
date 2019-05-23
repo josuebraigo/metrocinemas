@@ -91,7 +91,7 @@ class MovieController extends Controller
             $letra = 0;
             $numero = 0;
             for($i = 0; $i < sizeof($seleccionados); $i++) {
-                $letra = $arr[$seleccionados[$i] / 10];
+                $letra = $arr[($seleccionados[$i] / 10)];
                 $numero = ($seleccionados[$i] % 10) + 1;
                 $seleccionados[$i] = $letra.$numero;
             }

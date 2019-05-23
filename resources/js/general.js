@@ -69,7 +69,7 @@ $(document).ready(function() {
 		if(!$(this).hasClass('ocupado')) {
 			if (!$(this).hasClass('active')) {
 				$(this).addClass('active');
-				index = $('span').index(this);
+				index = $('.asientos span').index(this);
 				asientos[index] = true;
 				seleccionados.push(index);
 				cantidad++;
@@ -92,12 +92,16 @@ $(document).ready(function() {
 	});
 
 	$('#btnContinuar').click(function(){
-		$.ajaxSetup({
-		  headers: {
-		      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-		  }
-		});
-		$.ajax({
+		if(cantidad <= 0) {
+			alert("Debes seleccionar por lo menos un asiento");
+		}
+		else {
+			$.ajaxSetup({
+			  headers: {
+			      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			  }
+			});
+			$.ajax({
 				url:'/ticket',
 				type: 'POST',
 				data: {seats: asientos, function: funcion, selected: seleccionados},
@@ -108,6 +112,7 @@ $(document).ready(function() {
 					console.log('error: ' + result);
 				}
 			});
+		}
 	});
 
 });

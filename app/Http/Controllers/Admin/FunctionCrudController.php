@@ -107,6 +107,8 @@ class FunctionCrudController extends CrudController
         // your additional operations after save here
         // use $this->data['entry'] or $this->crud->entry
 
+
+        /////////////////////////Asientos Inicializados
         $seats = array();
 
         for ($i=0; $i < 100; $i++) {
