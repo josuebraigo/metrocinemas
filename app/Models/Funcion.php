@@ -34,6 +34,7 @@ class Funcion extends Model
     | RELATIONS
     |--------------------------------------------------------------------------
     */
+    
     public function movie() {
 
         return $this->belongsTo('App\Models\Movie');
@@ -45,6 +46,11 @@ class Funcion extends Model
         return $this->belongsTo('App\Models\Room');
 
     }
+
+    public function tickets() {
+        return $this->hasMany('App\Ticket');
+    }
+
     /*
     |--------------------------------------------------------------------------
     | SCOPES

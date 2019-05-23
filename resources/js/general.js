@@ -1,4 +1,12 @@
 $(document).ready(function() {
+
+	$('.boton-menu .animated-icon').click(function () {
+		console.log("hola");
+      	$('.animated-icon').toggleClass('open');
+      	$('.collapse').slideToggle();
+    });
+
+    
 	$('.peliculas').slick({
       	infinite: true,
 		slidesToShow: 4,
@@ -91,10 +99,10 @@ $(document).ready(function() {
 		});
 		$.ajax({
 				url:'/ticket',
-				type: 'PUT',
+				type: 'POST',
 				data: {seats: asientos, function: funcion, selected: seleccionados},
 				success: function(result){
-					window.location.replace('/ticket');
+					window.location.replace('/ticket/' + result);
 				},
 				error: function(result){
 					console.log('error: ' + result);

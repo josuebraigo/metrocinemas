@@ -13,6 +13,13 @@ module.exports = __webpack_require__(9);
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function($) {$(document).ready(function () {
+
+	$('.boton-menu .animated-icon').click(function () {
+		console.log("hola");
+		$('.animated-icon').toggleClass('open');
+		$('.collapse').slideToggle();
+	});
+
 	$('.peliculas').slick({
 		infinite: true,
 		slidesToShow: 4,
@@ -91,27 +98,22 @@ module.exports = __webpack_require__(9);
 	});
 
 	$('#btnContinuar').click(function () {
-		if(cantidad <= 0) {
-			alert("Debes seleccionar al menos 1 asiento");
-		}
-		else {
-			$.ajaxSetup({
-				headers: {
-					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-				}
-			});
-			$.ajax({
-				url: '/ticket',
-				type: 'post',
-				data: { seats: asientos, function: funcion, selected: seleccionados },
-				success: function success(result) {
-					window.location.replace('/ticket');
-				},
-				error: function error(result) {
-					console.log('error: ' + result);
-				}
-			});
-		}
+		$.ajaxSetup({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			}
+		});
+		$.ajax({
+			url: '/ticket',
+			type: 'POST',
+			data: { seats: asientos, function: funcion, selected: seleccionados },
+			success: function success(result) {
+				window.location.replace('/ticket/' + result);
+			},
+			error: function error(result) {
+				console.log('error: ' + result);
+			}
+		});
 	});
 });
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))

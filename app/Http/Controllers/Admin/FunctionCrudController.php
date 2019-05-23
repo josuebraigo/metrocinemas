@@ -9,6 +9,8 @@ use App\Http\Requests\FunctionRequest as StoreRequest;
 use App\Http\Requests\FunctionRequest as UpdateRequest;
 use Backpack\CRUD\CrudPanel;
 use App\Models\FunctionSeat;
+use Validator;
+use Carbon\Carbon;
 
 /**
  * Class FunctionCrudController
@@ -91,7 +93,15 @@ class FunctionCrudController extends CrudController
           $seats[] = false;
         }
 
-        // dd($request->request);
+        $timeFormat = $request->request->get('schedule');
+        $schedule = Carbon::parse($timeFormat)->format('H:i');
+
+        $movie_id = $request->request->get('movie_id');
+        $movie = \App\Models\Movie::where('id', $movie_id)->firstOrFail();
+        $finish = Carbon::parse($schedule)->addMinutes($movie->duration + 30)->format('H:i');
+
+        $request->request->set('finish', $finish);
+
         // your additional operations before save here
         $redirect_location = parent::storeCrud($request);
         // your additional operations after save here
@@ -113,6 +123,14 @@ class FunctionCrudController extends CrudController
 
     public function update(UpdateRequest $request)
     {
+        $timeFormat = $request->request->get('schedule');
+        $schedule = Carbon::parse($timeFormat)->format('H:i');
+
+        $movie_id = $request->request->get('movie_id');
+        $movie = \App\Models\Movie::where('id', $movie_id)->firstOrFail();
+        $finish = Carbon::parse($schedule)->addMinutes($movie->duration + 30)->format('H:i');
+
+        $request->request->set('finish', $finish);
         // your additional operations before save here
         $redirect_location = parent::updateCrud($request);
         // your additional operations after save here

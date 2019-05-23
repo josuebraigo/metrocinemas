@@ -5,11 +5,16 @@ html
 	body#ticket
 		include include/header
 		.container
-			h1 {{$function->movie->name}}
-			h2 {{$function->schedule}}
-			h3 Asientos:
-				@for($i = 0; $i < sizeOf($seleccionados); $i++)
-				span {{$seleccionados[$i]}}
-					| ,
-				@endfor
+			.pelicula
+				img(src!="{{$function->movie->poster}}")
+				h1 {{$function->movie->name}}
+			.info
+				h2 Horario: {{$function->schedule}}
+				h3 Asientos:
+					@for($i = 0; $i < sizeOf($seleccionados); $i++)
+					span {{$seleccionados[$i]}}
+						| ,
+					@endfor
+				h3 Sala: {{$function->room->name}}
+				p Código: {{$ticket->code}}
 		include include/footer

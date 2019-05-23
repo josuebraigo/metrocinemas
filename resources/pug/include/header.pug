@@ -1,4 +1,4 @@
-header
+header.desktopMaster
 	a(href="/")
 		img(src="/img/logo_metrocinemas.png")
 	form.buscar(method="get" action="/buscar")
@@ -13,3 +13,19 @@ header
 				a(href="/funciones") Funciones
 			//- li
 				a(href="funciones") Funciones
+header.mobileMaster
+	a(href="/")
+		img(src="/img/logo_metrocinemas.png")
+	.menuMovil
+		button.boton-menu(type="button")
+			.animated-icon
+				span
+				span
+				span
+				span
+		.collapse
+			ul
+				li
+					a(href="/") Inicio
+				li
+					a(href="/funciones") Funciones

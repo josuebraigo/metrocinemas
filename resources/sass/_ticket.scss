@@ -1,0 +1,41 @@
+#ticket {
+	.container {
+		width: 80%;
+		margin: 2em auto;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-around;
+		.pelicula {
+			width: 30%;
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			align-items: center;
+			img {
+				width: 100%;
+			}
+			h1 {
+				width: 100%;
+				text-align: center;
+			}
+		}
+		.info {
+			width: 70%;
+			display: flex;
+		    flex-wrap: wrap;
+		    align-items: center;
+			h2, h3, p {
+				width: 100%;
+				text-align: center;
+			}
+			p {
+				font-size: 3em;
+				width: 70%;
+				margin: 0 auto;
+				padding: 10px;
+				border: 2px solid rgba(0, 0, 0, .5);
+				background: #fff;
+			}
+		}
+	}
+}

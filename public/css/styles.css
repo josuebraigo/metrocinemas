@@ -3677,7 +3677,7 @@ body .slick-prev:before {
   color: #3D4852;
 }
 
-header {
+header.desktopMaster {
   width: 80%;
   padding: 1em 10%;
   display: -webkit-box;
@@ -3694,15 +3694,15 @@ header {
   background-color: rgba(0, 0, 0, 0.5);
 }
 
-header a {
+header.desktopMaster a {
   width: 25%;
 }
 
-header a img {
+header.desktopMaster a img {
   width: 100%;
 }
 
-header form {
+header.desktopMaster form {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -3717,7 +3717,7 @@ header form {
   width: 50%;
 }
 
-header form input {
+header.desktopMaster form input {
   width: 75%;
   border: none;
   height: 2em;
@@ -3727,23 +3727,23 @@ header form input {
   border-bottom: 2px solid #fff;
 }
 
-header form input::-webkit-input-placeholder {
+header.desktopMaster form input::-webkit-input-placeholder {
   color: #fff;
 }
 
-header form input::-moz-placeholder {
+header.desktopMaster form input::-moz-placeholder {
   color: #fff;
 }
 
-header form input::-ms-input-placeholder {
+header.desktopMaster form input::-ms-input-placeholder {
   color: #fff;
 }
 
-header form input::placeholder {
+header.desktopMaster form input::placeholder {
   color: #fff;
 }
 
-header form button {
+header.desktopMaster form button {
   width: 10%;
   border: none;
   height: 2em;
@@ -3751,11 +3751,11 @@ header form button {
   background-color: transparent;
 }
 
-header nav {
+header.desktopMaster nav {
   width: 25%;
 }
 
-header nav ul {
+header.desktopMaster nav ul {
   width: 100%;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -3766,15 +3766,196 @@ header nav ul {
       justify-content: space-around;
 }
 
-header nav ul li {
+header.desktopMaster nav ul li {
   display: inline;
 }
 
-header nav ul li a {
+header.desktopMaster nav ul li a {
   color: #fff;
   text-decoration: none;
   font-weight: 600;
   text-transform: uppercase;
+}
+
+header.mobileMaster {
+  display: none;
+  width: 100%;
+  left: 0;
+  padding: 1em 0;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  z-index: 1;
+}
+
+header.mobileMaster a {
+  width: 30%;
+  margin-left: 10%;
+}
+
+header.mobileMaster a img {
+  width: 100%;
+}
+
+header.mobileMaster .menuMovil {
+  display: block;
+  margin-right: 10%;
+}
+
+header.mobileMaster .menuMovil button {
+  border: 0;
+  background: transparent;
+}
+
+header.mobileMaster .menuMovil .collapse {
+  display: none;
+  width: 100%;
+  font-size: 2.5em;
+  position: absolute;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.9);
+  margin-top: .4em;
+  padding-top: 1em;
+  height: 100vh;
+  z-index: 1;
+}
+
+header.mobileMaster .menuMovil .collapse ul {
+  height: 40%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  width: 80%;
+  margin: 0 auto;
+  border-top: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+}
+
+header.mobileMaster .menuMovil .collapse ul li {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 100%;
+}
+
+header.mobileMaster .menuMovil .collapse ul li a {
+  color: #fff;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-weight: 300;
+}
+
+header.mobileMaster .menuMovil .collapse .addres {
+  display: block;
+  margin: 0 auto;
+  width: 75%;
+  padding: 1.75em 0;
+}
+
+header.mobileMaster .menuMovil .collapse .addres p {
+  color: #fff;
+  font-size: .6em;
+  line-height: 1.1em;
+}
+
+header.mobileMaster .menuMovil .collapse .redes-sociales {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding-left: 12.5%;
+}
+
+header.mobileMaster .menuMovil .collapse .redes-sociales p {
+  color: #fff;
+  font-size: .6em;
+}
+
+header.mobileMaster .menuMovil .collapse .redes-sociales .red {
+  font-size: .4em;
+  padding: 0 2vw;
+}
+
+header.mobileMaster .menuMovil .collapse .redes-sociales .red span {
+  color: #fff;
+}
+
+header.mobileMaster .menuMovil .collapse .redes-sociales .red .fa-stack-1x {
+  color: #FF7143;
+}
+
+header.mobileMaster .menuMovil .animated-icon {
+  width: 10vw;
+  height: 2.5em;
+  position: relative;
+  margin: 0px;
+  -webkit-transform: rotate(0deg);
+  transform: rotate(0deg);
+  -webkit-transition: .5s ease-in-out;
+  transition: .5s ease-in-out;
+  cursor: pointer;
+}
+
+header.mobileMaster .menuMovil .animated-icon span {
+  display: block;
+  position: absolute;
+  height: .5em;
+  width: 100%;
+  border-radius: 9px;
+  opacity: 1;
+  left: 0;
+  background: #fff;
+  -webkit-transform: rotate(0deg);
+  transform: rotate(0deg);
+  -webkit-transition: .25s ease-in-out;
+  transition: .25s ease-in-out;
+}
+
+header.mobileMaster .menuMovil .animated-icon span:nth-child(1) {
+  top: 0px;
+}
+
+header.mobileMaster .menuMovil .animated-icon span:nth-child(2),
+header.mobileMaster .menuMovil .animated-icon span:nth-child(3) {
+  top: 1em;
+}
+
+header.mobileMaster .menuMovil .animated-icon span:nth-child(4) {
+  bottom: 0;
+}
+
+header.mobileMaster .menuMovil .open span:nth-child(1),
+header.mobileMaster .menuMovil .open span:nth-child(4) {
+  top: 11px;
+  width: 0%;
+  left: 50%;
+}
+
+header.mobileMaster .menuMovil .open span:nth-child(2) {
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+header.mobileMaster .menuMovil .open span:nth-child(3) {
+  -webkit-transform: rotate(-45deg);
+  transform: rotate(-45deg);
 }
 
 footer {
@@ -4230,5 +4411,228 @@ footer a {
 #seats .detalles button:hover {
   background-color: #3D4852;
   color: #fff;
+}
+
+#ticket .container {
+  width: 80%;
+  margin: 2em auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+}
+
+#ticket .container .pelicula {
+  width: 30%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+#ticket .container .pelicula img {
+  width: 100%;
+}
+
+#ticket .container .pelicula h1 {
+  width: 100%;
+  text-align: center;
+}
+
+#ticket .container .info {
+  width: 70%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+#ticket .container .info h2,
+#ticket .container .info h3,
+#ticket .container .info p {
+  width: 100%;
+  text-align: center;
+}
+
+#ticket .container .info p {
+  font-size: 3em;
+  width: 70%;
+  margin: 0 auto;
+  padding: 10px;
+  border: 2px solid rgba(0, 0, 0, 0.5);
+  background: #fff;
+}
+
+#error .container {
+  width: 100%;
+  height: 100vh;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+#error .container p {
+  font-size: 3em;
+}
+
+@media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
+  html,
+  body {
+    font-size: 12px;
+  }
+
+  html header.desktopMaster,
+  body header.desktopMaster {
+    display: none;
+  }
+
+  html header.mobileMaster,
+  body header.mobileMaster {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+  }
+
+  #home h1 {
+    margin-top: 3em;
+    font-size: 1.9em;
+  }
+
+  #home h1 a {
+    width: 80%;
+  }
+
+  #home .peliculas {
+    width: 65%;
+    margin-bottom: 10em;
+  }
+
+  footer {
+    position: fixed;
+    bottom: 0;
+  }
+
+  #cartelera .container {
+    margin-top: 12vh;
+    width: 90%;
+    margin-bottom: 10em;
+  }
+
+  #cartelera .container .catalogo .col14 {
+    width: 85%;
+    margin-bottom: 4em;
+  }
+
+  #cartelera .container .catalogo .col14 h2 {
+    margin: 5px 0;
+  }
+
+  #cartelera .container .submenu ul {
+    padding-left: 5vw;
+  }
+
+  #funciones .container {
+    margin-top: 10vh;
+    margin-bottom: 10vh;
+    min-height: inherit;
+  }
+
+  #funciones .container .funciones {
+    margin-bottom: 10px;
+  }
+
+  #funciones .container .funciones h2 {
+    padding: 0;
+    margin: 0;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+  }
+
+  #pelicula .container {
+    margin-top: 12vh;
+    margin-bottom: 12vh;
+    width: 90%;
+  }
+
+  #pelicula .container .poster {
+    width: 70%;
+    margin: 0 auto;
+  }
+
+  #pelicula .container .info {
+    width: 100%;
+  }
+
+  #pelicula .container .info iframe {
+    width: 100%;
+    height: 22vh;
+  }
+
+  #seats .container {
+    margin-top: 12vh;
+    width: 90%;
+  }
+
+  #seats .container .asientos {
+    width: 90%;
+  }
+
+  #seats .container .asientos span {
+    font-size: .65em;
+  }
+
+  #seats .detalles {
+    position: initial;
+    width: 90%;
+    margin: 0 auto;
+    margin-bottom: 12vh;
+  }
+
+  #seats .detalles button {
+    margin: 0;
+  }
+
+  #ticket .container {
+    width: 90%;
+    margin-top: 12vh;
+    margin-bottom: 12vh;
+  }
+
+  #ticket .container .pelicula {
+    width: 80%;
+  }
+
+  #ticket .container .info {
+    width: 90%;
+  }
+
+  #ticket .container .info p {
+    width: 100%;
+    font-size: 2em;
+  }
 }
 

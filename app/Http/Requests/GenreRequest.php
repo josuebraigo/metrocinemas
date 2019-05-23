@@ -26,6 +26,7 @@ class GenreRequest extends FormRequest
     public function rules()
     {
         return [
+            'name' => 'required',
             // 'name' => 'required|min:5|max:255'
         ];
     }
@@ -51,6 +52,7 @@ class GenreRequest extends FormRequest
     {
         return [
             //
+            'name.required' => 'Se requiere un nombre para el genero',
         ];
     }
 }

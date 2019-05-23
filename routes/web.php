@@ -20,3 +20,4 @@ Route::get('/funciones/{slug}', 'MovieController@functionsMovie');
 Route::get('/funciones/{slug}/{function}', 'MovieController@seatsFunction');
 Route::get('/cartelera/{slug}', 'MovieController@genresMovie');
 Route::post('/ticket', 'MovieController@asignarAsientos');
+Route::get('/ticket/{code}', 'MovieController@ticket')->name('ticket');

@@ -27,6 +27,9 @@ class FunctionRequest extends FormRequest
     {
         return [
             // 'name' => 'required|min:5|max:255'
+            'schedule' => 'required',
+            'movie_id' => 'required',
+            'room_id' => 'required',
         ];
     }
 
@@ -51,6 +54,10 @@ class FunctionRequest extends FormRequest
     {
         return [
             //
+            'schedule.required' => "Se requiere un horario",
+            'movie_id.required' => "Se necesita elegir una película",
+            'room_id.required' => "Se necesita elegir una sala",
         ];
+
     }
 }
